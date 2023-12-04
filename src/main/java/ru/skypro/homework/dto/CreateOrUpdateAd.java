@@ -10,5 +10,4 @@ public class CreateOrUpdateAd {
     private int price;
     private String description;
 
-
 }

@@ -1,13 +1,12 @@
 package ru.skypro.homework.dto.entity;
 
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
 
-//@Entity
-//@Table(name = "comments")
+import javax.persistence.*;
+
+@Entity
+@Table(name = "comments")
 public class Comment {
 
     @Id

@@ -1,13 +1,13 @@
 package ru.skypro.homework.dto.entity;
 
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import ru.skypro.homework.dto.Role;
+
+import javax.persistence.*;
 import java.util.Objects;
 
-//@Entity
-//@Table(name = "users")
+@Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -17,12 +17,13 @@ public class User {
     private String firstName;
     private String lastName;
     private String phone;
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private String imageLink;
 
 
     public User(int id, String email, String firstName,
-                String lastName, String phone, String role, String imageLink) {
+                String lastName, String phone, Role role, String imageLink) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -75,11 +76,11 @@ public class User {
         this.phone = phone;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

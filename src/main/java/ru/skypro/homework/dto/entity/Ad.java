@@ -1,15 +1,12 @@
 package ru.skypro.homework.dto.entity;
 
-import net.bytebuddy.utility.dispatcher.JavaDispatcher;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.Objects;
 
+import javax.persistence.*;
 
-//@Entity
-//@Table(name = "ads")
+
+@Entity
+@Table(name = "ads")
 public class Ad {
 
     @Id
