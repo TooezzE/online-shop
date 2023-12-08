@@ -1,4 +1,4 @@
-package ru.skypro.homework.dto.entity;
+package ru.skypro.homework.entity;
 
 import java.util.Objects;
 
@@ -11,7 +11,7 @@ public class Ad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private int authorId;
     private String imageLink;
     private int price;

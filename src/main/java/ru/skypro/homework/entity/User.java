@@ -1,6 +1,7 @@
-package ru.skypro.homework.dto.entity;
+package ru.skypro.homework.entity;
 
 
+import org.springframework.security.core.userdetails.UserDetails;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String email;
     private String firstName;
     private String lastName;

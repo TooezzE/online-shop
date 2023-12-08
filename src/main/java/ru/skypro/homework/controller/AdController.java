@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
-import ru.skypro.homework.dto.entity.Ad;
-import ru.skypro.homework.dto.entity.ExtendedAd;
+import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.entity.ExtendedAd;
 
 @Controller
 @RequestMapping("/ads")

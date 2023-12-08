@@ -40,23 +40,23 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf()
-                .disable()
-                .authorizeHttpRequests(
+                .disable() // отключаем csrf для работы с запросами в postman
+                .authorizeHttpRequests( // предоставляем разрешения для следующих url:
                         authorization ->
                                 authorization
                                         .mvcMatchers(AUTH_WHITELIST)
-                                        .permitAll()
+                                        .permitAll()// разрешает доступ всем, в том числе неаутентифированным пользователям
                                         .mvcMatchers("/ads/**", "/users/**")
-                                        .authenticated())
+                                        .authenticated()) // доступ всем аутентифицированным пользователям
                 .cors()
                 .and()
-                .httpBasic(withDefaults());
+                .httpBasic(withDefaults()); // задает тип аутентификации, показывает пользователю нативную браузерную форму для ввода данных
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    } // бин определяет, как шифруется пароль
 
 }

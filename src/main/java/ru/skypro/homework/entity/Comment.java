@@ -1,4 +1,4 @@
-package ru.skypro.homework.dto.entity;
+package ru.skypro.homework.entity;
 
 import javax.persistence.Id;
 import java.util.Objects;
@@ -11,7 +11,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private int authorId;
     private String authorImgLink;
     private String authorFirstName;
