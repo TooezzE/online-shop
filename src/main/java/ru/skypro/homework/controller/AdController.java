@@ -5,10 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
-import ru.skypro.homework.entity.Ad;
-import ru.skypro.homework.entity.ExtendedAd;
+import ru.skypro.homework.dto.ExtendedAd;
 
 @Controller
 @RequestMapping("/ads")
@@ -37,8 +37,8 @@ public class AdController {
     }
 
     @PatchMapping("/{id}")
-    public Ad updateAd(@PathVariable int id, @RequestBody CreateOrUpdateAd newAd) {
-        return new Ad();
+    public AdDTO updateAd(@PathVariable int id, @RequestBody CreateOrUpdateAd newAd) {
+        return new AdDTO();
     }
 
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

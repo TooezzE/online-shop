@@ -15,6 +15,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String email;
+    private String password;
     private String firstName;
     private String lastName;
     private String phone;
@@ -23,9 +24,9 @@ public class User {
     private String imageLink;
 
 
-    public User(int id, String email, String firstName,
-                String lastName, String phone, Role role, String imageLink) {
+    public User(Integer id, String password, String email, String firstName, String lastName, String phone, Role role, String imageLink) {
         this.id = id;
+        this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -37,12 +38,20 @@ public class User {
     public User() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -93,35 +102,29 @@ public class User {
         this.imageLink = imageLink;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id
-                && Objects.equals(email, user.email)
-                && Objects.equals(firstName, user.firstName)
-                && Objects.equals(lastName, user.lastName)
-                && Objects.equals(phone, user.phone) && Objects.equals(role, user.role)
-                && Objects.equals(imageLink, user.imageLink);
+        return Objects.equals(id, user.id) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && role == user.role && Objects.equals(imageLink, user.imageLink);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, firstName, lastName, phone, role, imageLink);
+        return Objects.hash(id, password, email, firstName, lastName, phone, role, imageLink);
     }
-
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
-                ", role='" + role + '\'' +
+                ", role=" + role +
                 ", imageLink='" + imageLink + '\'' +
                 '}';
     }

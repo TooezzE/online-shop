@@ -1,32 +1,48 @@
 package ru.skypro.homework.mappers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.Comments;
+import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.repository.CommentRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CommentMapper {
 
-    @Autowired
-    private CommentRepository repository;
-    public Comments getComments() {
-        Comments comments = new Comments();
-        List<Comment> res = new ArrayList<>(repository.findAll());
-        comments.setResults(res);
-        comments.setCount(res.size());
-        return comments;
-    }
+     public CommentDTO commentToCommentDTO(Comment comment) {
+         CommentDTO dto = new CommentDTO();
+         dto.setPk(comment.getId());
+         dto.setAuthor(comment.getAuthorId());
+         dto.setText(comment.getText());
+         dto.setCreatedAt(comment.getCreatedAt());
+         dto.setAuthorImage(comment.getAuthorImgLink());
+         dto.setAuthorFirstName(comment.getAuthorFirstName());
 
-    public Comment createOrUpdateCommentConverter(CreateOrUpdateComment createOrUpdateComment) {
-        Comment comment = new Comment();
-        comment.setText(createOrUpdateComment.getText());
-        return comment;
-    }
-    
+         return dto;
+     }
+
+     public CreateOrUpdateComment commentToCreateOrUpdateComment(Comment comment) {
+         CreateOrUpdateComment dto = new CreateOrUpdateComment();
+         dto.setText(comment.getText());
+
+         return dto;
+     }
+
+     public Comment commentDTOToComment(CommentDTO dto) {
+         Comment comment = new Comment();
+         comment.setId(dto.getPk());
+         comment.setCreatedAt(dto.getCreatedAt());
+         comment.setAuthorId(dto.getAuthor());
+         comment.setAuthorFirstName(dto.getAuthorFirstName());
+         comment.setAuthorImgLink(dto.getAuthorImage());
+         comment.setText(dto.getText());
+
+         return comment; // not all fields
+     }
+
+     public Comment createOrUpdateCommentToComment(CreateOrUpdateComment dto) {
+         Comment comment = new Comment();
+         comment.setText(dto.getText());
+
+         return comment; // not all fields
+     }
 }
