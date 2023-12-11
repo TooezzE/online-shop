@@ -6,11 +6,11 @@ import lombok.Data;
 @Data
 public class CommentDTO {
 
-    private int pk;
-    private int author;
+    private Integer pk;
+    private Integer author;
     private String authorImage;
     private String authorFirstName;
-    private int createdAt;
+    private Long createdAt;
     private String text;
 
 }
