@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class AdDTO {
 
-    private int pk;
-    private int author;
+    private Integer pk;
+    private Integer author;
     private String image;
-    private int price;
+    private Integer price;
     private String title;
 
 }

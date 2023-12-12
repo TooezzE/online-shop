@@ -3,17 +3,15 @@
 -- changeset egor:1
 
 create table comments (
-    id int,
-    authorId int,
-    authorFirstName varchar,
-    authorImgLink varchar,
+    id int primary key,
+    foreign key (authorId) references users (id),
     createdAt int,
     text varchar
 )
 
 
 create table users (
-    id int,
+    id int primary key,
     email varchar,
     password varchar,
     firstName varchar,
@@ -24,10 +22,8 @@ create table users (
 )
 
 create table ads (
-    id int,
-    authorFirstName varchar,
-    authorLastName varchar,
-    authorId int,
+    id int primary key,
+    foreign key (authorId) references users (id),
     email varchar,
     description varchar,
     imageLink varchar,
