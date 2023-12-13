@@ -1,4 +1,4 @@
-package ru.skypro.homework.dto.entity;
+package ru.skypro.homework.entity;
 
 import javax.persistence.Id;
 import java.util.Objects;
@@ -11,20 +11,15 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private int authorId;
-    private String authorImgLink;
-    private String authorFirstName;
-    private int createdAt;
+    private Integer id;
+    private Integer authorId;
+    private Long createdAt;
     private String text;
 
 
-    public Comment(int id, int authorId, String authorImgLink,
-                   String authorFirstName, int createdAt, String text) {
+    public Comment(int id, Integer authorId, Long createdAt, String text) {
         this.id = id;
         this.authorId = authorId;
-        this.authorImgLink = authorImgLink;
-        this.authorFirstName = authorFirstName;
         this.createdAt = createdAt;
         this.text = text;
     }
@@ -48,27 +43,11 @@ public class Comment {
         this.authorId = authorId;
     }
 
-    public String getAuthorImgLink() {
-        return authorImgLink;
-    }
-
-    public void setAuthorImgLink(String authorImgLink) {
-        this.authorImgLink = authorImgLink;
-    }
-
-    public String getAuthorFirstName() {
-        return authorFirstName;
-    }
-
-    public void setAuthorFirstName(String authorFirstName) {
-        this.authorFirstName = authorFirstName;
-    }
-
-    public int getCreatedAt() {
+    public Long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(int createdAt) {
+    public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -88,14 +67,12 @@ public class Comment {
         return id == comment.id
                 && authorId == comment.authorId
                 && createdAt == comment.createdAt
-                && Objects.equals(authorImgLink, comment.authorImgLink)
-                && Objects.equals(authorFirstName, comment.authorFirstName)
                 && Objects.equals(text, comment.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, authorId, authorImgLink, authorFirstName, createdAt, text);
+        return Objects.hash(id, authorId, createdAt, text);
     }
 
     @Override
@@ -103,8 +80,6 @@ public class Comment {
         return "Comment{" +
                 "id=" + id +
                 ", authorId=" + authorId +
-                ", authorImgLink='" + authorImgLink + '\'' +
-                ", authorFirstName='" + authorFirstName + '\'' +
                 ", createdAt=" + createdAt +
                 ", text='" + text + '\'' +
                 '}';
