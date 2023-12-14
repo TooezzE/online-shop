@@ -14,8 +14,6 @@ public class CommentMapper {
          dto.setAuthor(comment.getAuthorId());
          dto.setText(comment.getText());
          dto.setCreatedAt(comment.getCreatedAt());
-         dto.setAuthorImage(comment.getAuthorImgLink());
-         dto.setAuthorFirstName(comment.getAuthorFirstName());
 
          return dto;
      }
@@ -32,8 +30,6 @@ public class CommentMapper {
          comment.setId(dto.getPk());
          comment.setCreatedAt(dto.getCreatedAt());
          comment.setAuthorId(dto.getAuthor());
-         comment.setAuthorFirstName(dto.getAuthorFirstName());
-         comment.setAuthorImgLink(dto.getAuthorImage());
          comment.setText(dto.getText());
 
          return comment; // not all fields
