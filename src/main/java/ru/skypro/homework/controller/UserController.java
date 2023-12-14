@@ -7,20 +7,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
-import ru.skypro.homework.dto.entity.User;
+import ru.skypro.homework.dto.UserDTO;
 
 @Controller
 @RequestMapping("/users")
 public class UserController {
 
-    @PatchMapping("/set_password")
+    @PostMapping("/set_password")
     public ResponseEntity<?> updatePassword(@RequestBody NewPassword newPassword) {
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
-    public User getUserInfo() {
-        return new User();
+    public UserDTO getUserInfo() {
+        return new UserDTO();
     }
 
     @PatchMapping("/me")
