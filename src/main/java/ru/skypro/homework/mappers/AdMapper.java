@@ -57,8 +57,6 @@ public class AdMapper {
             dto.setEmail(ad.getEmail());
             dto.setTitle(ad.getTitle());
             dto.setPrice(ad.getPrice());
-            dto.setAuthorFirstName(ad.getAuthorFirstName());
-            dto.setAuthorLastName(ad.getAuthorLastName());
 
             return dto;
         }
@@ -70,8 +68,6 @@ public class AdMapper {
             ad.setDescription(extendedAd.getDescription());
             ad.setTitle(extendedAd.getTitle());
             ad.setImageLink(extendedAd.getImage());
-            ad.setAuthorFirstName(extendedAd.getAuthorFirstName());
-            ad.setAuthorLastName(extendedAd.getAuthorLastName());
             ad.setEmail(extendedAd.getEmail());
 
             return ad; // not all fields
