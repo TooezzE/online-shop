@@ -1,7 +1,7 @@
 package ru.skypro.homework.dto;
 
 import lombok.Data;
-import ru.skypro.homework.dto.entity.Ad;
+import ru.skypro.homework.entity.Ad;
 
 import java.util.List;
 
@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 public class Ads {
 
-    private int count;
+    private Integer count;
     private List<Ad> results;
 }
