@@ -4,29 +4,29 @@
 
 create table comments (
     id int primary key,
-    foreign key (authorId) references users (id),
-    createdAt int,
+    author_id int,
+    created_at int8,
     text varchar
-)
+);
 
 
 create table users (
     id int primary key,
     email varchar,
     password varchar,
-    firstName varchar,
-    lastName varchar,
+    first_name varchar,
+    last_name varchar,
     phone varchar,
     role varchar,
-    imageLink varchar
-)
+    image_link varchar
+);
 
 create table ads (
     id int primary key,
-    foreign key (authorId) references users (id),
+    author_id int,
     email varchar,
     description varchar,
-    imageLink varchar,
+    image_link varchar,
     price int,
     title varchar
-)
+);
