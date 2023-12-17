@@ -43,7 +43,6 @@ public class UserMapper {
         dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
         dto.setPhone(user.getPhone());
-        dto.setImage(user.getImageLink());
         dto.setRole(user.getRole());
 
         return dto;
@@ -57,7 +56,6 @@ public class UserMapper {
         user.setLastName(dto.getLastName());
         user.setPhone(dto.getPhone());
         user.setRole(dto.getRole());
-        user.setImageLink(dto.getImage());
 
         return user;
     }

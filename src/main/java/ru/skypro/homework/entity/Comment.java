@@ -1,5 +1,7 @@
 package ru.skypro.homework.entity;
 
+import lombok.Getter;
+
 import javax.persistence.Id;
 import java.util.Objects;
 
@@ -12,35 +14,35 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer authorId;
+    @Column(name = "created_at")
     private Long createdAt;
+    @Column(name = "text")
     private String text;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+    private Ad ad;
 
 
-    public Comment(int id, Integer authorId, Long createdAt, String text) {
+    public Comment(Integer id, Long createdAt, String text, User user, Ad ad) {
         this.id = id;
-        this.authorId = authorId;
         this.createdAt = createdAt;
         this.text = text;
+        this.user = user;
+        this.ad = ad;
     }
 
     public Comment() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
-    }
-
-    public int getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
     }
 
     public Long getCreatedAt() {
@@ -59,29 +61,45 @@ public class Comment {
         this.text = text;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Ad getAd() {
+        return ad;
+    }
+
+    public void setAd(Ad ad) {
+        this.ad = ad;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
         return id == comment.id
-                && authorId == comment.authorId
                 && createdAt == comment.createdAt
                 && Objects.equals(text, comment.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, authorId, createdAt, text);
+        return Objects.hash(id, createdAt, text);
     }
 
     @Override
     public String toString() {
         return "Comment{" +
                 "id=" + id +
-                ", authorId=" + authorId +
                 ", createdAt=" + createdAt +
                 ", text='" + text + '\'' +
+                ", user=" + user +
+                ", ad=" + ad +
                 '}';
     }
 }

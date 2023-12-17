@@ -4,9 +4,10 @@
 
 create table comments (
     id int primary key,
-    author_id int,
     created_at int8,
-    text varchar
+    text varchar,
+    ad_id int,
+    user_id int
 );
 
 
@@ -18,15 +19,35 @@ create table users (
     last_name varchar,
     phone varchar,
     role varchar,
-    image_link varchar
+    avatar_id int
 );
 
 create table ads (
     id int primary key,
-    author_id int,
-    email varchar,
     description varchar,
-    image_link varchar,
+    email varchar,
     price int,
-    title varchar
+    title varchar,
+    user_id int,
+    image_id int
+);
+
+create table avatars (
+    id int primary key,
+    name varchar,
+    original_file_name varchar,
+    size int8,
+    content_type varchar,
+    "bytes" oid NULL,
+    user_id int
+);
+
+create table images (
+    id int primary key,
+    name varchar,
+    original_file_name varchar,
+    size int8,
+    content_type varchar,
+    "bytes" oid NULL,
+    ad_id int
 );

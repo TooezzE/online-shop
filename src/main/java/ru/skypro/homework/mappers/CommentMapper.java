@@ -11,7 +11,6 @@ public class CommentMapper {
      public CommentDTO commentToCommentDTO(Comment comment) {
          CommentDTO dto = new CommentDTO();
          dto.setPk(comment.getId());
-         dto.setAuthor(comment.getAuthorId());
          dto.setText(comment.getText());
          dto.setCreatedAt(comment.getCreatedAt());
 
@@ -29,7 +28,6 @@ public class CommentMapper {
          Comment comment = new Comment();
          comment.setId(dto.getPk());
          comment.setCreatedAt(dto.getCreatedAt());
-         comment.setAuthorId(dto.getAuthor());
          comment.setText(dto.getText());
 
          return comment; // not all fields
