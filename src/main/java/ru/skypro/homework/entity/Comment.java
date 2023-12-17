@@ -15,6 +15,13 @@ public class Comment {
     private Integer authorId;
     private Long createdAt;
     private String text;
+//    @ManyToOne
+//    @JoinColumn(name="user_id",referencedColumnName = "id")
+//    private User user;
+//    @ManyToOne
+//    @JoinColumn(name="ad_id", referencedColumnName = "id")
+//    private Ad ad;
+// Переделать конструктор!!!
 
 
     public Comment(int id, Integer authorId, Long createdAt, String text) {

@@ -1,5 +1,6 @@
 package ru.skypro.homework.entity;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.*;
@@ -25,6 +26,16 @@ public class Ad {
     private Integer price;
     @Size(min = 4, max = 32)
     private String title;
+//    @OneToOne
+//    @JoinColumn(name="image_id",referencedColumnName = "id")
+//    private Image image;
+//    @ManyToOne
+//    @JoinColumn(name ="user_id", referencedColumnName = "id")
+//    private User user;
+//    @OneToMany(mappedBy ="ad")
+//    private List<Comment> comments;
+// Нужно переделать конструктор!!!!!!!
+
 
 
     public Ad(Integer id,

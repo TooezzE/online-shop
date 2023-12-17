@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -31,7 +32,14 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
     private String imageLink;
-
+//    @OneToOne
+//    @JoinColumn(name = "image_id", referencedColumnName = "id")
+//    private Image image;
+//    @OneToMany(mappedBy = "user")
+//    private List<Comment> comments;
+//    @OneToMany(mappedBy = "user")
+//    private List<Ad> ad;
+//Переделать конструктор!
 
     public User(Integer id, String password, String email, String firstName, String lastName, String phone, Role role, String imageLink) {
         this.id = id;
