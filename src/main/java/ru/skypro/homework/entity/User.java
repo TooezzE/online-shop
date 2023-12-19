@@ -23,7 +23,7 @@ public class User implements UserDetails {
     @Size(min = 4, max = 32)
     @Column(name = "email")
     private String email;
-    @Size(min = 8, max = 16)
+    @Size(min = 8, max = 64)
     @Column(name = "password")
     private String password;
     @Size(min = 2, max = 16)
@@ -120,6 +120,21 @@ public class User implements UserDetails {
     public void setAvatar(Avatar avatar) {
         this.avatar = avatar;
     }
+    public List<Ad> getUserAds() {
+        return userAds;
+    }
+
+    public void setUserAds(List<Ad> userAds) {
+        this.userAds = userAds;
+    }
+
+    public List<Comment> getUserComments() {
+        return userComments;
+    }
+
+    public void setUserComments(List<Comment> userComments) {
+        this.userComments = userComments;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -180,21 +195,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true                                                                                                                     ;
-    }
-
-    public List<Ad> getUserAds() {
-        return userAds;
-    }
-
-    public void setUserAds(List<Ad> userAds) {
-        this.userAds = userAds;
-    }
-
-    public List<Comment> getUserComments() {
-        return userComments;
-    }
-
-    public void setUserComments(List<Comment> userComments) {
-        this.userComments = userComments;
     }
 }

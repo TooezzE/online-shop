@@ -1,9 +1,9 @@
 package ru.skypro.homework.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.Comments;
@@ -13,7 +13,9 @@ import ru.skypro.homework.exceptions.CommentNotFoundException;
 import ru.skypro.homework.exceptions.ForbiddenAccessException;
 import ru.skypro.homework.service.CommentService;
 
-@Controller
+@Slf4j
+@CrossOrigin(value = "http://localhost:3000")
+@RestController
 @RequestMapping("/ads")
 public class CommentController {
 

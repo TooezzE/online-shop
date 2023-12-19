@@ -1,25 +1,33 @@
 package ru.skypro.homework.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
+import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mappers.UserMapper;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.interfaces.AuthService;
-import ru.skypro.homework.service.CustomUserDetailsManager;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    @Autowired
+    @Qualifier("userDetailsService")
     private CustomUserDetailsManager manager;
     private final PasswordEncoder encoder;
     private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
 
     public AuthServiceImpl(PasswordEncoder encoder,
-                           UserMapper userMapper) {
+                           UserMapper userMapper, UserRepository userRepository) {
         this.encoder = encoder;
         this.userMapper = userMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -36,8 +44,12 @@ public class AuthServiceImpl implements AuthService {
         if (manager.userExists(register.getUsername())) {
             return false;
         }
-        manager.createUser(userMapper.registerToUser(register));
+        User user = userMapper.registerToUser(register);
+        user.setRole(register.getRole());
+        user.setPassword(encoder.encode(user.getPassword()));
+        userRepository.save(user);
         return true;
     }
+
 
 }
