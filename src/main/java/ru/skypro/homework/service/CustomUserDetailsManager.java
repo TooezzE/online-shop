@@ -1,8 +1,10 @@
 package ru.skypro.homework.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 import ru.skypro.homework.entity.User;
@@ -16,8 +18,7 @@ public class CustomUserDetailsManager implements UserDetailsManager {
 
     @Override
     public void createUser(UserDetails user) {
-        User newUser = (User) user;
-        userRepository.save(newUser);
+        // released in AuthServiceImpl
     }
 
     @Override

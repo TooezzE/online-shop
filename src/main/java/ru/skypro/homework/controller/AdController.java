@@ -1,6 +1,8 @@
 package ru.skypro.homework.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,6 +18,8 @@ import ru.skypro.homework.service.AdService;
 
 import java.io.IOException;
 
+@Slf4j
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
 public class AdController {
@@ -40,6 +44,7 @@ public class AdController {
                 return ResponseEntity.ok().body(result);
             } catch (IOException e) {
                 e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

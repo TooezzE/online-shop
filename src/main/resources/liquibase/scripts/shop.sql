@@ -3,7 +3,7 @@
 -- changeset egor:1
 
 create table comments (
-    id int primary key,
+    id serial primary key,
     created_at int8,
     text varchar,
     ad_id int,
@@ -12,7 +12,7 @@ create table comments (
 
 
 create table users (
-    id int primary key,
+    id serial primary key,
     email varchar,
     password varchar,
     first_name varchar,
@@ -23,7 +23,7 @@ create table users (
 );
 
 create table ads (
-    id int primary key,
+    id serial primary key,
     description varchar,
     email varchar,
     price int,
@@ -33,7 +33,7 @@ create table ads (
 );
 
 create table avatars (
-    id int primary key,
+    id serial primary key,
     name varchar,
     original_file_name varchar,
     size int8,
@@ -43,7 +43,7 @@ create table avatars (
 );
 
 create table images (
-    id int primary key,
+    id serial primary key,
     name varchar,
     original_file_name varchar,
     size int8,
