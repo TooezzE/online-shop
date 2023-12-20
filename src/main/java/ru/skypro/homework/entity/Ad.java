@@ -16,42 +16,36 @@ public class Ad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer authorId;
     @Size(min = 8, max = 64)
+    @Column(name = "description")
     private String description;
+    @Column(name = "email")
     private String email;
-    private String imageLink;
     @Min(0)
     @Max(10000000)
+    @Column(name = "price")
     private Integer price;
     @Size(min = 4, max = 32)
+    @Column(name = "title")
     private String title;
-//    @OneToOne
-//    @JoinColumn(name="image_id",referencedColumnName = "id")
-//    private Image image;
-//    @ManyToOne
-//    @JoinColumn(name ="user_id", referencedColumnName = "id")
-//    private User user;
-//    @OneToMany(mappedBy ="ad")
-//    private List<Comment> comments;
-// Нужно переделать конструктор!!!!!!!
+    @OneToOne
+    private Image image;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @OneToMany(mappedBy = "ad")
+    private List<Comment> comments;
 
 
-
-    public Ad(Integer id,
-              int authorId,
-              String description,
-              String email,
-              String imageLink,
-              int price,
-              String title) {
+    public Ad(Integer id, String description, String email, Integer price, String title, Image image, User user, List<Comment> comments) {
         this.id = id;
-        this.authorId = authorId;
         this.description = description;
         this.email = email;
-        this.imageLink = imageLink;
         this.price = price;
         this.title = title;
+        this.image = image;
+        this.user = user;
+        this.comments = comments;
     }
 
     public Ad() {
@@ -81,19 +75,11 @@ public class Ad {
         this.email = email;
     }
 
-    public String getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(String imageLink) {
-        this.imageLink = imageLink;
-    }
-
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -105,12 +91,28 @@ public class Ad {
         this.title = title;
     }
 
-    public int getAuthorId() {
-        return authorId;
+    public Image getImage() {
+        return image;
     }
 
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override
@@ -118,24 +120,25 @@ public class Ad {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ad ad = (Ad) o;
-        return authorId == ad.authorId && price == ad.price && Objects.equals(id, ad.id) && Objects.equals(description, ad.description) && Objects.equals(email, ad.email) && Objects.equals(imageLink, ad.imageLink) && Objects.equals(title, ad.title);
+        return Objects.equals(id, ad.id) && Objects.equals(description, ad.description) && Objects.equals(email, ad.email) && Objects.equals(price, ad.price) && Objects.equals(title, ad.title) && Objects.equals(image, ad.image) && Objects.equals(user, ad.user) && Objects.equals(comments, ad.comments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, authorId, description, email, imageLink, price, title);
+        return Objects.hash(id, description, email, price, title, image, user, comments);
     }
 
     @Override
     public String toString() {
         return "Ad{" +
                 "id=" + id +
-                ", authorId=" + authorId +
                 ", description='" + description + '\'' +
                 ", email='" + email + '\'' +
-                ", imageLink='" + imageLink + '\'' +
                 ", price=" + price +
                 ", title='" + title + '\'' +
+                ", image=" + image +
+                ", user=" + user +
+                ", comments=" + comments +
                 '}';
     }
 }

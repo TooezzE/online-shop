@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,28 +21,32 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Size(min = 4, max = 32)
+    @Column(name = "email")
     private String email;
-    @Size(min = 8, max = 16)
+    @Size(min = 8, max = 64)
+    @Column(name = "password")
     private String password;
     @Size(min = 2, max = 16)
+    @Column(name = "first_name")
     private String firstName;
     @Size(min = 2, max = 16)
+    @Column(name = "last_name")
     private String lastName;
     @Pattern(regexp = "\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}")
+    @Column(name = "phone")
     private String phone;
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
-    private String imageLink;
-//    @OneToOne
-//    @JoinColumn(name = "image_id", referencedColumnName = "id")
-//    private Image image;
-//    @OneToMany(mappedBy = "user")
-//    private List<Comment> comments;
-//    @OneToMany(mappedBy = "user")
-//    private List<Ad> ad;
-//Переделать конструктор!
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Avatar avatar;
+    @OneToMany(mappedBy = "user")
+    private List<Ad> userAds;
+    @OneToMany(mappedBy = "user")
+    private List<Comment> userComments;
 
-    public User(Integer id, String password, String email, String firstName, String lastName, String phone, Role role, String imageLink) {
+
+    public User(Integer id, String password, String email, String firstName, String lastName, String phone, Role role, Avatar avatar, List<Ad> userAds) {
         this.id = id;
         this.password = password;
         this.email = email;
@@ -49,7 +54,8 @@ public class User implements UserDetails {
         this.lastName = lastName;
         this.phone = phone;
         this.role = role;
-        this.imageLink = imageLink;
+        this.avatar = avatar;
+        this.userAds = userAds;
     }
 
     public User() {
@@ -107,12 +113,27 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public String getImageLink() {
-        return imageLink;
+    public Avatar getAvatar() {
+        return avatar;
     }
 
-    public void setImageLink(String imageLink) {
-        this.imageLink = imageLink;
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+    }
+    public List<Ad> getUserAds() {
+        return userAds;
+    }
+
+    public void setUserAds(List<Ad> userAds) {
+        this.userAds = userAds;
+    }
+
+    public List<Comment> getUserComments() {
+        return userComments;
+    }
+
+    public void setUserComments(List<Comment> userComments) {
+        this.userComments = userComments;
     }
 
     @Override
@@ -120,12 +141,12 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && role == user.role && Objects.equals(imageLink, user.imageLink);
+        return Objects.equals(id, user.id) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && role == user.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, password, email, firstName, lastName, phone, role, imageLink);
+        return Objects.hash(id, password, email, firstName, lastName, phone, role);
     }
 
     @Override
@@ -138,14 +159,13 @@ public class User implements UserDetails {
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
                 ", role=" + role +
-                ", imageLink='" + imageLink + '\'' +
                 '}';
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singletonList(role);
     }
 
     public String getPassword() {
@@ -174,7 +194,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return true                                                                                                                     ;
     }
-
 }

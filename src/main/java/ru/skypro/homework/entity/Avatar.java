@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @Entity
-@Table(name = "images")
-public class Image {
+@Table(name = "avatars")
+public class Avatar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,19 +23,16 @@ public class Image {
     @Column(name = "bytes")
     private byte[] bytes;
     @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    private Ad ad;
+    private User user;
 
-    public Image(Integer id, String name, String originalFileName, Long size, String contentType, byte[] bytes, Ad ad) {
+    public Avatar(Integer id, String name, String originalFileName, Long size, String contentType, byte[] bytes, User user) {
         this.id = id;
         this.name = name;
         this.originalFileName = originalFileName;
         this.size = size;
         this.contentType = contentType;
         this.bytes = bytes;
-        this.ad = ad;
-    }
-
-    public Image() {
+        this.user = user;
     }
 
     public Integer getId() {
@@ -86,39 +83,39 @@ public class Image {
         this.bytes = bytes;
     }
 
-    public Ad getAd() {
-        return ad;
+    public User getUser() {
+        return user;
     }
 
-    public void setAd(Ad ad) {
-        this.ad = ad;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Image image = (Image) o;
-        return Objects.equals(id, image.id) && Objects.equals(name, image.name) && Objects.equals(originalFileName, image.originalFileName) && Objects.equals(size, image.size) && Objects.equals(contentType, image.contentType) && Arrays.equals(bytes, image.bytes) && Objects.equals(ad, image.ad);
+        Avatar avatar = (Avatar) o;
+        return Objects.equals(id, avatar.id) && Objects.equals(name, avatar.name) && Objects.equals(originalFileName, avatar.originalFileName) && Objects.equals(size, avatar.size) && Objects.equals(contentType, avatar.contentType) && Arrays.equals(bytes, avatar.bytes) && Objects.equals(user, avatar.user);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, originalFileName, size, contentType, ad);
+        int result = Objects.hash(id, name, originalFileName, size, contentType, user);
         result = 31 * result + Arrays.hashCode(bytes);
         return result;
     }
 
     @Override
     public String toString() {
-        return "Image{" +
+        return "Avatar{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", originalFileName='" + originalFileName + '\'' +
                 ", size=" + size +
                 ", contentType='" + contentType + '\'' +
                 ", bytes=" + Arrays.toString(bytes) +
-                ", ad=" + ad +
+                ", user=" + user +
                 '}';
     }
 }
