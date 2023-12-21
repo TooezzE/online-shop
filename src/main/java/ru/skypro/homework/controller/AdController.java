@@ -36,8 +36,8 @@ public class AdController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CreateOrUpdateAd> createAd(@RequestBody CreateOrUpdateAd ad,
-                                                     @RequestBody MultipartFile image, Authentication auth) {
+    public ResponseEntity<CreateOrUpdateAd> createAd(@RequestPart(name = "properties") CreateOrUpdateAd ad,
+                                                     @RequestPart(name = "image") MultipartFile image, Authentication auth) {
         if(auth.isAuthenticated()) {
             try {
                 CreateOrUpdateAd result = service.createAd(auth.getName(), ad, image);
@@ -98,7 +98,7 @@ public class AdController {
         if(!auth.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        byte[] res = new byte[1_000_000];
+        byte[] res = new byte[0];
         try {
             res = service.updateAdImage(auth.getName(), id, image);
         } catch (AdNotFoundException e) {

@@ -22,17 +22,14 @@ public class Image {
     @Lob
     @Column(name = "bytes")
     private byte[] bytes;
-    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    private Ad ad;
 
-    public Image(Integer id, String name, String originalFileName, Long size, String contentType, byte[] bytes, Ad ad) {
+    public Image(Integer id, String name, String originalFileName, Long size, String contentType, byte[] bytes) {
         this.id = id;
         this.name = name;
         this.originalFileName = originalFileName;
         this.size = size;
         this.contentType = contentType;
         this.bytes = bytes;
-        this.ad = ad;
     }
 
     public Image() {
@@ -86,25 +83,18 @@ public class Image {
         this.bytes = bytes;
     }
 
-    public Ad getAd() {
-        return ad;
-    }
-
-    public void setAd(Ad ad) {
-        this.ad = ad;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Image image = (Image) o;
-        return Objects.equals(id, image.id) && Objects.equals(name, image.name) && Objects.equals(originalFileName, image.originalFileName) && Objects.equals(size, image.size) && Objects.equals(contentType, image.contentType) && Arrays.equals(bytes, image.bytes) && Objects.equals(ad, image.ad);
+        return Objects.equals(id, image.id) && Objects.equals(name, image.name) && Objects.equals(originalFileName, image.originalFileName) && Objects.equals(size, image.size) && Objects.equals(contentType, image.contentType) && Arrays.equals(bytes, image.bytes);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, originalFileName, size, contentType, ad);
+        int result = Objects.hash(id, name, originalFileName, size, contentType);
         result = 31 * result + Arrays.hashCode(bytes);
         return result;
     }
@@ -118,7 +108,6 @@ public class Image {
                 ", size=" + size +
                 ", contentType='" + contentType + '\'' +
                 ", bytes=" + Arrays.toString(bytes) +
-                ", ad=" + ad +
                 '}';
     }
 }
