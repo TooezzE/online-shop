@@ -28,7 +28,7 @@ public class Ad {
     @Size(min = 4, max = 32)
     @Column(name = "title")
     private String title;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Image image;
     @ManyToOne
     @JoinColumn(name = "user_id")

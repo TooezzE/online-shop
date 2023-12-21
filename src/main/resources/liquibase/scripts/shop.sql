@@ -19,7 +19,7 @@ create table users (
     last_name varchar,
     phone varchar,
     role varchar,
-    avatar_id int
+    image_id int
 );
 
 create table ads (
@@ -32,22 +32,11 @@ create table ads (
     image_id int
 );
 
-create table avatars (
-    id serial primary key,
-    name varchar,
-    original_file_name varchar,
-    size int8,
-    content_type varchar,
-    "bytes" oid NULL,
-    user_id int
-);
-
 create table images (
     id serial primary key,
     name varchar,
     original_file_name varchar,
     size int8,
     content_type varchar,
-    "bytes" oid NULL,
-    ad_id int
+    "bytes" oid NULL
 );
