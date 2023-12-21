@@ -1,12 +1,9 @@
 package ru.skypro.homework.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
-import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mappers.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
@@ -15,16 +12,15 @@ import ru.skypro.homework.service.interfaces.AuthService;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    @Qualifier("userDetailsService")
-    private CustomUserDetailsManager manager;
+    private final CustomUserDetailsManager manager;
     private final PasswordEncoder encoder;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
 
-    public AuthServiceImpl(PasswordEncoder encoder,
+    public AuthServiceImpl(CustomUserDetailsManager manager, PasswordEncoder encoder,
                            UserMapper userMapper, UserRepository userRepository) {
+        this.manager = manager;
         this.encoder = encoder;
         this.userMapper = userMapper;
         this.userRepository = userRepository;

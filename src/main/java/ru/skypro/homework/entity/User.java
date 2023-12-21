@@ -39,14 +39,14 @@ public class User implements UserDetails {
     @Column(name = "role")
     private Role role;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Avatar avatar;
+    private Image image;
     @OneToMany(mappedBy = "user")
     private List<Ad> userAds;
     @OneToMany(mappedBy = "user")
     private List<Comment> userComments;
 
 
-    public User(Integer id, String password, String email, String firstName, String lastName, String phone, Role role, Avatar avatar, List<Ad> userAds) {
+    public User(Integer id, String password, String email, String firstName, String lastName, String phone, Role role, Image image, List<Ad> userAds) {
         this.id = id;
         this.password = password;
         this.email = email;
@@ -54,7 +54,7 @@ public class User implements UserDetails {
         this.lastName = lastName;
         this.phone = phone;
         this.role = role;
-        this.avatar = avatar;
+        this.image = image;
         this.userAds = userAds;
     }
 
@@ -113,12 +113,12 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public Avatar getAvatar() {
-        return avatar;
+    public Image getImage() {
+        return image;
     }
 
-    public void setAvatar(Avatar avatar) {
-        this.avatar = avatar;
+    public void setImage(Image image) {
+        this.image = image;
     }
     public List<Ad> getUserAds() {
         return userAds;

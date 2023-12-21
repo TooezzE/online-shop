@@ -25,7 +25,7 @@ public class UserService {
 
     public boolean updatePassword(String username, NewPassword newPassword) {
         User user = repository.findByEmail(username);
-        if(encoder.matches(user.getPassword(), newPassword.getCurrentPassword())) {
+        if(encoder.matches(newPassword.getCurrentPassword(), user.getPassword())) {
             user.setPassword(encoder.encode(newPassword.getNewPassword()));
             repository.save(user);
             return true;

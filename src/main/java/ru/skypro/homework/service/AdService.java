@@ -2,6 +2,7 @@ package ru.skypro.homework.service;
 
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.Ads;
@@ -19,6 +20,7 @@ import ru.skypro.homework.repository.UserRepository;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AdService {
@@ -35,8 +37,11 @@ public class AdService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public Ads getAllAds() {
-        List<Ad> adList = adRepository.findAll();
+        List<AdDTO> adList = adRepository.findAll().stream()
+                .map(a -> mapper.toDTO(a))
+                .collect(Collectors.toList());
         Ads ads = new Ads();
         ads.setResults(adList);
         ads.setCount(adList.size());
@@ -85,10 +90,11 @@ public class AdService {
         return mapper.toDTO(ad);
     }
 
+    @Transactional
     public Ads getAllAdsOfUser(String username) {
         User user = userRepository.findByEmail(username);
         Ads ads = new Ads();
-        ads.setResults(user.getUserAds());
+        ads.setResults(user.getUserAds().stream().map(a -> mapper.toDTO(a)).collect(Collectors.toList()));
         ads.setCount(user.getUserAds().size());
         return ads;
     }
