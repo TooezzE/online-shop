@@ -34,9 +34,7 @@ create table ads (
 
 create table images (
     id serial primary key,
-    name varchar,
-    original_file_name varchar,
-    size int8,
+    file_size int8,
     content_type varchar,
     "bytes" oid NULL
 );

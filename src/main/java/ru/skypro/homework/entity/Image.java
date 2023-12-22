@@ -11,23 +11,17 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "original_file_name")
-    private String originalFileName;
-    @Column(name = "size")
-    private Long size;
+    @Column(name = "file_size")
+    private Long fileSize;
     @Column(name = "content_type")
     private String contentType;
     @Lob
     @Column(name = "bytes")
     private byte[] bytes;
 
-    public Image(Integer id, String name, String originalFileName, Long size, String contentType, byte[] bytes) {
+    public Image(Integer id, Long fileSize, String contentType, byte[] bytes) {
         this.id = id;
-        this.name = name;
-        this.originalFileName = originalFileName;
-        this.size = size;
+        this.fileSize = fileSize;
         this.contentType = contentType;
         this.bytes = bytes;
     }
@@ -43,28 +37,12 @@ public class Image {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Long getFileSize() {
+        return fileSize;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getOriginalFileName() {
-        return originalFileName;
-    }
-
-    public void setOriginalFileName(String originalFileName) {
-        this.originalFileName = originalFileName;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
     }
 
     public String getContentType() {
@@ -89,12 +67,12 @@ public class Image {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Image image = (Image) o;
-        return Objects.equals(id, image.id) && Objects.equals(name, image.name) && Objects.equals(originalFileName, image.originalFileName) && Objects.equals(size, image.size) && Objects.equals(contentType, image.contentType) && Arrays.equals(bytes, image.bytes);
+        return Objects.equals(id, image.id) && Objects.equals(fileSize, image.fileSize) && Objects.equals(contentType, image.contentType) && Arrays.equals(bytes, image.bytes);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, originalFileName, size, contentType);
+        int result = Objects.hash(id, fileSize, contentType);
         result = 31 * result + Arrays.hashCode(bytes);
         return result;
     }
@@ -103,9 +81,7 @@ public class Image {
     public String toString() {
         return "Image{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", originalFileName='" + originalFileName + '\'' +
-                ", size=" + size +
+                ", size=" + fileSize +
                 ", contentType='" + contentType + '\'' +
                 ", bytes=" + Arrays.toString(bytes) +
                 '}';

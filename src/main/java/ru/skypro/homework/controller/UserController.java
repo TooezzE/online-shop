@@ -53,6 +53,10 @@ public class UserController {
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUserImage(@RequestBody MultipartFile image, Authentication auth) {
+        if(!auth.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        service.updateUserImage(auth.getName(), image);
         return ResponseEntity.ok().build();
     }
 }
