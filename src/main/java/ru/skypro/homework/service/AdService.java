@@ -101,17 +101,15 @@ public class AdService {
         return ads;
     }
 
-    public Void updateAdImage(String username, Integer id, MultipartFile file) {
+    @Transactional
+    public void updateAdImage(String username, Integer id, MultipartFile file) {
         Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
         User user = userRepository.findByEmail(username);
         if(!user.getUserAds().contains(ad)) {
             throw new ForbiddenAccessException();
         }
-        Integer imageId = ad.getImage().getId();
         ad.setImage(imageService.addImage(file));
-        imageService.deleteImage(imageId);
         adRepository.save(ad);
-        return null;
     }
 
     private Image toImageEntity(MultipartFile file) throws IOException {

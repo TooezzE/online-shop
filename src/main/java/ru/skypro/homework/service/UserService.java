@@ -53,7 +53,6 @@ public class UserService {
         return updateUser;
     }
 
-    @Transactional
     public void updateUserImage(String username, MultipartFile file) {
         User user = userRepository.findByEmail(username);
         if (user.getImage() == null) {
