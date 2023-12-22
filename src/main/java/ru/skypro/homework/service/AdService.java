@@ -114,9 +114,7 @@ public class AdService {
 
     private Image toImageEntity(MultipartFile file) throws IOException {
         Image image = new Image();
-        image.setName(file.getName());
-        image.setSize(file.getSize());
-        image.setOriginalFileName(file.getOriginalFilename());
+        image.setFileSize(file.getSize());
         image.setBytes(file.getBytes());
         image.setContentType(file.getContentType());
         return image;

@@ -22,7 +22,7 @@ public class AdMapper {
             AdDTO dto = new AdDTO();
             dto.setPk(entity.getId());
             dto.setAuthor(entity.getUser().getId());
-            //dto.setImage(entity.getImage().getName());
+            dto.setImage("/images/get/" + entity.getImage().getId());
             dto.setTitle(entity.getTitle());
             dto.setPrice(entity.getPrice());
 
@@ -52,7 +52,10 @@ public class AdMapper {
             dto.setPk(ad.getId());
             dto.setDescription(ad.getDescription());
             dto.setEmail(ad.getEmail());
+            dto.setImage("/images/get/" + ad.getImage().getId());
             dto.setTitle(ad.getTitle());
+            dto.setAuthorFirstName(ad.getUser().getFirstName());
+            dto.setAuthorLastName(ad.getUser().getLastName());
             dto.setPrice(ad.getPrice());
 
             return dto;
