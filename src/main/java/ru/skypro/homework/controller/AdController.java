@@ -94,21 +94,17 @@ public class AdController {
     }
 
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte[]> updateAdImage(@PathVariable Integer id, @RequestBody MultipartFile image, Authentication auth) {
+    public ResponseEntity<Void> updateAdImage(@PathVariable Integer id, @RequestBody MultipartFile image, Authentication auth) {
         if(!auth.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        byte[] res = new byte[0];
         try {
-            res = service.updateAdImage(auth.getName(), id, image);
+            return ResponseEntity.ok(service.updateAdImage(auth.getName(), id, image));
         } catch (AdNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (ForbiddenAccessException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return ResponseEntity.ok().body(res);
     }
 
     @GetMapping("/me")

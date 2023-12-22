@@ -15,7 +15,6 @@ public class Image {
     private Long fileSize;
     @Column(name = "content_type")
     private String contentType;
-    @Lob
     @Column(name = "bytes")
     private byte[] bytes;
 
