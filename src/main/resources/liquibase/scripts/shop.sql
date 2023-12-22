@@ -36,5 +36,5 @@ create table images (
     id serial primary key,
     file_size int8,
     content_type varchar,
-    "bytes" oid NULL
+    "bytes" bytea NULL
 );

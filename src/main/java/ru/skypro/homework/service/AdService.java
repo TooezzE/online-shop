@@ -28,12 +28,14 @@ public class AdService {
     private final AdRepository adRepository;
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
     private final AdMapper mapper;
 
-    public AdService(AdRepository adRepository, UserRepository userRepository, ImageRepository imageRepository, AdMapper mapper) {
+    public AdService(AdRepository adRepository, UserRepository userRepository, ImageRepository imageRepository, ImageService imageService, AdMapper mapper) {
         this.adRepository = adRepository;
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;
+        this.imageService = imageService;
         this.mapper = mapper;
     }
 
@@ -99,17 +101,17 @@ public class AdService {
         return ads;
     }
 
-    public byte[] updateAdImage(String username, Integer id, MultipartFile file) throws IOException {
+    public Void updateAdImage(String username, Integer id, MultipartFile file) {
         Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
         User user = userRepository.findByEmail(username);
         if(!user.getUserAds().contains(ad)) {
             throw new ForbiddenAccessException();
-        } else {
-            Image image = imageRepository.save(toImageEntity(file));
-            ad.setImage(image);
-            adRepository.save(ad);
         }
-        return file.getBytes();
+        Integer imageId = ad.getImage().getId();
+        ad.setImage(imageService.addImage(file));
+        imageService.deleteImage(imageId);
+        adRepository.save(ad);
+        return null;
     }
 
     private Image toImageEntity(MultipartFile file) throws IOException {

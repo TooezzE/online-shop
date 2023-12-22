@@ -38,6 +38,7 @@ public class UserService {
         return false;
     }
 
+    @Transactional
     public UserDTO getUserInfo(String username) {
         User user = userRepository.findByEmail(username);
         return mapper.userToUserDTO(user);
