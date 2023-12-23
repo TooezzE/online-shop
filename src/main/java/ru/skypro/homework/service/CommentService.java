@@ -17,6 +17,7 @@ import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -37,7 +38,7 @@ public class CommentService {
     public Comments getCommentsOfAd(Integer adId) {
         Ad ad = adRepository.findById(adId).orElseThrow(AdNotFoundException::new);
         Comments comments = new Comments();
-        comments.setResults(ad.getComments());
+        comments.setResults(ad.getComments().stream().map(c -> mapper.commentToCommentDTO(c)).collect(Collectors.toList()));
         comments.setCount(ad.getComments().size());
         return comments;
     }
