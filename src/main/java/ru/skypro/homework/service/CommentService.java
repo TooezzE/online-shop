@@ -49,6 +49,7 @@ public class CommentService {
         Comment comment = mapper.createOrUpdateCommentToComment(text);
         comment.setUser(user);
         comment.setCreatedAt(System.currentTimeMillis());
+        comment.setAd(ad);
         commentRepository.save(comment);
         List<Comment> commentList = ad.getComments();
         commentList.add(comment);
