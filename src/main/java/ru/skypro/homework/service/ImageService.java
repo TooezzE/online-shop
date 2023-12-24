@@ -1,5 +1,6 @@
 package ru.skypro.homework.service;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,10 +22,23 @@ public class ImageService {
         this.repository = repository;
     }
 
+    /**
+     * Получение изображения по ID
+     * Метод использует {@link JpaRepository#findById(Object)}
+     *
+     * @param id - id изображения
+     */
     public Image getImage(Integer id) {
         return repository.findById(id).orElseThrow(ImageNotFoundException::new);
     }
 
+    /**
+     * Добавление изображения в репозиторий
+     * Метод использует {@link JpaRepository#save(Object)}
+     *
+     * @param image - изображение
+     * @return добавленное изображение
+     */
     public Image addImage(MultipartFile image) {
         Image newImage = new Image();
         try {
@@ -38,6 +52,11 @@ public class ImageService {
         return newImage;
     }
 
+    /**
+     * Удаление изображения из репозитория
+     * Метод использует {@link JpaRepository#deleteById(Object)}
+     * @param imageId - id изображения
+     */
     public void deleteImage(Integer imageId) {
         repository.deleteById(imageId);
     }

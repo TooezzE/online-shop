@@ -1,6 +1,6 @@
 package ru.skypro.homework.service;
 
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,12 @@ public class CommentService {
         this.mapper = mapper;
     }
 
-
+    /**
+     * Метод получения списка всех комментариев объявления
+     * Метод использует {@link JpaRepository#findById(Object)}
+     * @param adId - id объявления
+     * @return возвращает DTO модели комментариев
+     */
     public Comments getCommentsOfAd(Integer adId) {
         Ad ad = adRepository.findById(adId).orElseThrow(AdNotFoundException::new);
         Comments comments = new Comments();
@@ -44,7 +49,16 @@ public class CommentService {
         comments.setCount(ad.getComments().size());
         return comments;
     }
-
+    /**
+     * Метод добавления комментария к объявлению
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     * {@link JpaRepository#findById(Object)}
+     * {@link JpaRepository#save(Object)}
+     * {@link CommentMapper#commentToCommentDTO(Comment)}
+     * @param adId - id объявления
+     * @param text - DTO модель класса {@link CreateOrUpdateComment};
+     * @return возвращает DTO модель комментария
+     */
 
     public CommentDTO createComment(Integer adId, CreateOrUpdateComment text, String username) {
         Ad ad = adRepository.findById(adId).orElseThrow(AdNotFoundException::new);
@@ -61,7 +75,12 @@ public class CommentService {
 
         return mapper.commentToCommentDTO(comment);
     }
-
+    /**
+     * Метод удаляет комментарий
+     * Метод использует {@link JpaRepository#deleteById(Object)}
+     * @param adId - id объявления
+     * @param commentId - id объявления
+     */
     public void deleteComment(Integer adId, Integer commentId, String username) {
         Ad ad = adRepository.findById(adId).orElseThrow(AdNotFoundException::new);
         User user = userRepository.findByEmail(username);
@@ -80,7 +99,17 @@ public class CommentService {
             commentRepository.deleteById(comment.getId());
         }
 //    }
-
+    /**
+     * Метод для изменения комментария
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     * {@link JpaRepository#findById(Object)}
+     * {@link JpaRepository#save(Object)}
+     * {@link CommentMapper#commentToCommentDTO(Comment)}
+     * @param adId - id объявления
+     * @param commentId - id комментария
+     * @param text - DTO модель класса {@link CreateOrUpdateComment};
+     * @return - возвращает DTO модель комментария
+     */
     public CommentDTO editComment(Integer adId, Integer commentId, CreateOrUpdateComment text, String username) {
         Ad ad = adRepository.findById(adId).orElseThrow(AdNotFoundException::new);
         User user = userRepository.findByEmail(username);

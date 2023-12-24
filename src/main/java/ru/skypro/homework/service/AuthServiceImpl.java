@@ -25,7 +25,13 @@ public class AuthServiceImpl implements AuthService {
         this.userMapper = userMapper;
         this.userRepository = userRepository;
     }
-
+    /**
+     * Логика аутентификации пользователя.
+     * Метод использует {@link CustomUserDetailsManager#loadUserByUsername(String)}
+     * {@link PasswordEncoder#matches(CharSequence, String)}
+     * @param userName - логин пользователя
+     * @param password - пароль пользователя
+     */
     @Override
     public boolean login(String userName, String password) {
         if (!manager.userExists(userName)) {
@@ -34,7 +40,13 @@ public class AuthServiceImpl implements AuthService {
         UserDetails userDetails = manager.loadUserByUsername(userName);
         return encoder.matches(password, userDetails.getPassword());
     }
-
+    /**
+     * Логика регистрации нового пользователя.
+     * {@link PasswordEncoder#encode(CharSequence)}
+     * {@link UserMapper#registerToUser(Register)}
+     * @param register - информация о пользователе, который необходимо зарегистрировать.
+     * @return true, если регистрация прошла успешно, иначе - false.
+     */
     @Override
     public boolean register(Register register) {
         if (manager.userExists(register.getUsername())) {
