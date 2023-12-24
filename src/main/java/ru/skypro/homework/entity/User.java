@@ -40,9 +40,9 @@ public class User implements UserDetails {
     private Role role;
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Image image;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Ad> userAds;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> userComments;
 
 

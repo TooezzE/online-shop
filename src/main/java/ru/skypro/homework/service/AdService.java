@@ -94,7 +94,7 @@ public class AdService {
     public void deleteAd(String username, Integer id) {
         Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
         User user = userRepository.findByEmail(username);
-        if(!user.getUserAds().contains(ad) || !user.getAuthorities().contains("ROLE_ADMIN")) {
+        if(!user.getUserAds().contains(ad) || !user.getRole().getAuthority().equals("ROLE_ADMIN")) {
             throw new ForbiddenAccessException();
         } else  {
             adRepository.deleteById(id);

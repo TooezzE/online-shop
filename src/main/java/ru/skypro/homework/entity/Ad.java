@@ -33,7 +33,7 @@ public class Ad {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToMany(mappedBy = "ad", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
 
