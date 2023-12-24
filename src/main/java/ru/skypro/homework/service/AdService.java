@@ -9,13 +9,12 @@ import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.Ad;
-import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.exceptions.AdNotFoundException;
 import ru.skypro.homework.exceptions.ForbiddenAccessException;
 import ru.skypro.homework.mappers.AdMapper;
 import ru.skypro.homework.repository.AdRepository;
-import ru.skypro.homework.repository.ImageRepository;
+import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
 
 import java.io.IOException;
@@ -29,12 +28,14 @@ public class AdService {
     private final UserRepository userRepository;
     private final ImageService imageService;
     private final AdMapper mapper;
+    private final CommentRepository commentRepository;
 
-    public AdService(AdRepository adRepository, UserRepository userRepository, ImageService imageService, AdMapper mapper) {
+    public AdService(AdRepository adRepository, UserRepository userRepository, ImageService imageService, AdMapper mapper, CommentRepository commentRepository) {
         this.adRepository = adRepository;
         this.userRepository = userRepository;
         this.imageService = imageService;
         this.mapper = mapper;
+        this.commentRepository = commentRepository;
     }
     /**
      ** Метод для получения всех объявлений в виде DTO моделей
@@ -89,16 +90,26 @@ public class AdService {
      * Метод для удаления объявления по id
      * Метод использует {@link AdRepository#findById(Object)}
      * {@link AdRepository#deleteById(Object)}
-     * @param id - id объявления
+     *
+     * @param id   - id объявления
+     * @param name
      */
-    public void deleteAd(String username, Integer id) {
-        Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
-        User user = userRepository.findByEmail(username);
-        if(!user.getUserAds().contains(ad) || !user.getAuthorities().contains("ROLE_ADMIN")) {
-            throw new ForbiddenAccessException();
-        } else  {
-            adRepository.deleteById(id);
-        }
+
+        public Void deleteAd(String name, Integer adId) {
+
+            Integer imageId = adRepository.findById(adId).orElseThrow(AdNotFoundException::new).getImage().getId();
+            adRepository.deleteById(adId);
+            imageService.deleteImage(imageId);
+            commentRepository.deleteAllByAd_Id(adId);
+            return null;
+
+//        Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
+//        User user = userRepository.findByEmail(username);
+//        if(!user.getUserAds().contains(ad) || !user.getAuthorities().contains("ROLE_ADMIN")) {
+//            throw new ForbiddenAccessException();
+//        } else  {
+//            adRepository.deleteById(id);
+//        }
     }
     /**
      * Метод для изменения объявления
