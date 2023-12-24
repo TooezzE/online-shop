@@ -98,6 +98,7 @@ public class CommentService {
             userRepository.save(user);
             adRepository.save(ad);
             commentRepository.deleteById(commentId);
+            commentRepository.save(comment);
         }
         return mapper.commentToCommentDTO(comment);
     }
