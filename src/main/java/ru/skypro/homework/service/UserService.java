@@ -1,5 +1,5 @@
 package ru.skypro.homework.service;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,14 @@ public class UserService {
         this.mapper = mapper;
     }
 
-
+    /**
+     * Изменение пароля пользователя
+     * метод использует {@link UserRepository#findByEmail(String)}
+     * {@link PasswordEncoder#matches(CharSequence, String)}
+     * {@link PasswordEncoder#encode(CharSequence)}
+     * {@link JpaRepository#save(Object)}
+     * @param newPassword - новый пароль пользователя
+     */
     public boolean updatePassword(String username, NewPassword newPassword) {
         User user = userRepository.findByEmail(username);
         if(encoder.matches(newPassword.getCurrentPassword(), user.getPassword())) {
@@ -37,12 +44,23 @@ public class UserService {
         }
         return false;
     }
-
+    /**
+     * Извлекает текущего аутентифицированного пользователя.
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     * {@link UserMapper#userToUserDTO(User)}
+     * @return - объект UserDTO, представляющий текущего пользователя.
+     */
     @Transactional
     public UserDTO getUserInfo(String username) {
         User user = userRepository.findByEmail(username);
         return mapper.userToUserDTO(user);
     }
+    /**
+     * Изменение данных пользователя
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     * @param updateUser - DTO модель класса {@link UpdateUser}
+     * @return - пользователя с измененными данными
+     */
 
     public UpdateUser updateUserInfo(String username, UpdateUser updateUser) {
         User user = userRepository.findByEmail(username);
@@ -52,7 +70,15 @@ public class UserService {
         userRepository.save(user);
         return updateUser;
     }
-
+    /**
+     * Изменение аватарки пользователя
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     * {@link ImageService#addImage(MultipartFile)}
+     * {@link JpaRepository#save(Object)}
+     * {@link ImageService#deleteImage(Integer)}
+     * @param file - новая аватарка пользователя
+     * @param username - логин пользователя
+     */
     public void updateUserImage(String username, MultipartFile file) {
         User user = userRepository.findByEmail(username);
         if (user.getImage() == null) {
