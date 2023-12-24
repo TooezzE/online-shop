@@ -22,7 +22,7 @@
 
 
 ## Над проектом работали
-- Егор ([TooezzE](https://github.com/TooezzE))
-- Александр ([ChristmasLime](https://github.com/ChristmasLime))
-- Динар ([Dinfat696](https://github.com/Dinfat696))
+- Егор Иртуганов ([TooezzE](https://github.com/TooezzE))
+- Александр Лимонов ([ChristmasLime](https://github.com/ChristmasLime))
+- Динар Фатхрахманов ([Dinfat696](https://github.com/Dinfat696))
 

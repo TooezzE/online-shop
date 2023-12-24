@@ -1,6 +1,8 @@
 package ru.skypro.homework.service;
 
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.Comments;
@@ -64,41 +66,44 @@ public class CommentService {
         Ad ad = adRepository.findById(adId).orElseThrow(AdNotFoundException::new);
         User user = userRepository.findByEmail(username);
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
-        if(!user.getUserComments().contains(comment) || !user.getAuthorities().contains("ROLE_ADMIN")) {
-            throw new ForbiddenAccessException();
-        } else {
-            List<Comment> userComments = user.getUserComments();
-            List<Comment> adComments = ad.getComments();
-            userComments.remove(comment);
-            adComments.remove(comment);
-            user.setUserComments(userComments);
-            ad.setComments(adComments);
+//        if(!user.getUserComments().contains(comment) || !user.getAuthorities().contains("ROLE_ADMIN")) {
+//            throw new ForbiddenAccessException();
+//        } else {
+//            List<Comment> userComments = user.getUserComments();
+//            List<Comment> adComments = ad.getComments();
+//            userComments.remove(comment);
+//            adComments.remove(comment);
+//            user.setUserComments(userComments);
+//            ad.setComments(adComments);
             userRepository.save(user);
             adRepository.save(ad);
-            commentRepository.deleteById(commentId);
+            commentRepository.deleteById(comment.getId());
         }
-    }
+//    }
 
     public CommentDTO editComment(Integer adId, Integer commentId, CreateOrUpdateComment text, String username) {
         Ad ad = adRepository.findById(adId).orElseThrow(AdNotFoundException::new);
         User user = userRepository.findByEmail(username);
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
-        if(!user.getUserComments().contains(comment)) {
-            throw new ForbiddenAccessException();
-        } else {
-            List<Comment> userComments = user.getUserComments();
-            List<Comment> adComments = ad.getComments();
-            userComments.remove(comment);
-            adComments.remove(comment);
-            comment.setText(text.getText());
-            userComments.add(comment);
-            adComments.add(comment);
-            user.setUserComments(userComments);
-            ad.setComments(adComments);
-            userRepository.save(user);
-            adRepository.save(ad);
-            commentRepository.deleteById(commentId);
-        }
+        comment.setText(text.getText());
+        commentRepository.save(comment);
+//        if(!user.getUserComments().contains(comment)) {
+//            throw new ForbiddenAccessException();
+//        } else {
+//            List<Comment> userComments = user.getUserComments();
+//            List<Comment> adComments = ad.getComments();
+//            userComments.remove(comment);
+//            adComments.remove(comment);
+//            comment.setText(text.getText());
+//            userComments.add(comment);
+//            adComments.add(comment);
+//            user.setUserComments(userComments);
+//            ad.setComments(adComments);
+//            userRepository.save(user);
+//            adRepository.save(ad);
+//            commentRepository.deleteById(commentId);
+//            commentRepository.save(comment);
+//        }
         return mapper.commentToCommentDTO(comment);
     }
 }
