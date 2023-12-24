@@ -38,6 +38,7 @@ public class UserService {
         return false;
     }
 
+    @Transactional
     public UserDTO getUserInfo(String username) {
         User user = userRepository.findByEmail(username);
         return mapper.userToUserDTO(user);
@@ -52,7 +53,6 @@ public class UserService {
         return updateUser;
     }
 
-    @Transactional
     public void updateUserImage(String username, MultipartFile file) {
         User user = userRepository.findByEmail(username);
         if (user.getImage() == null) {

@@ -27,13 +27,13 @@ public class AdService {
 
     private final AdRepository adRepository;
     private final UserRepository userRepository;
-    private final ImageRepository imageRepository;
+    private final ImageService imageService;
     private final AdMapper mapper;
 
-    public AdService(AdRepository adRepository, UserRepository userRepository, ImageRepository imageRepository, AdMapper mapper) {
+    public AdService(AdRepository adRepository, UserRepository userRepository, ImageService imageService, AdMapper mapper) {
         this.adRepository = adRepository;
         this.userRepository = userRepository;
-        this.imageRepository = imageRepository;
+        this.imageService = imageService;
         this.mapper = mapper;
     }
 
@@ -56,7 +56,7 @@ public class AdService {
         ad.setEmail(username);
         ad.setPrice(createOrUpdateAd.getPrice());
         ad.setTitle(createOrUpdateAd.getTitle());
-        ad.setImage(imageRepository.save(toImageEntity(file)));
+        ad.setImage(imageService.addImage(file));
         adRepository.save(ad);
         return createOrUpdateAd;
     }
@@ -99,24 +99,16 @@ public class AdService {
         return ads;
     }
 
-    public byte[] updateAdImage(String username, Integer id, MultipartFile file) throws IOException {
+    @Transactional
+    public void updateAdImage(String username, Integer id, MultipartFile file) {
         Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
         User user = userRepository.findByEmail(username);
         if(!user.getUserAds().contains(ad)) {
             throw new ForbiddenAccessException();
-        } else {
-            Image image = imageRepository.save(toImageEntity(file));
-            ad.setImage(image);
-            adRepository.save(ad);
         }
-        return file.getBytes();
-    }
-
-    private Image toImageEntity(MultipartFile file) throws IOException {
-        Image image = new Image();
-        image.setFileSize(file.getSize());
-        image.setBytes(file.getBytes());
-        image.setContentType(file.getContentType());
-        return image;
+        Integer imageId = ad.getImage().getId();
+        ad.setImage(imageService.addImage(file));
+        imageService.deleteImage(imageId);
+        adRepository.save(ad);
     }
 }

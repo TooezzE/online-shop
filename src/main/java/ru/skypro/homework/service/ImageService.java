@@ -31,10 +31,10 @@ public class ImageService {
             newImage.setBytes(image.getBytes());
             newImage.setContentType(image.getContentType());
             newImage.setFileSize(image.getSize());
+            repository.save(newImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        repository.save(newImage);
         return newImage;
     }
 

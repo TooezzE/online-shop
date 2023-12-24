@@ -38,11 +38,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Image image;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Ad> userAds;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Comment> userComments;
 
 
