@@ -85,20 +85,12 @@ public class CommentService {
         Ad ad = adRepository.findById(adId).orElseThrow(AdNotFoundException::new);
         User user = userRepository.findByEmail(username);
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
-//        if(!user.getUserComments().contains(comment) || !user.getAuthorities().contains("ROLE_ADMIN")) {
-//            throw new ForbiddenAccessException();
-//        } else {
-//            List<Comment> userComments = user.getUserComments();
-//            List<Comment> adComments = ad.getComments();
-//            userComments.remove(comment);
-//            adComments.remove(comment);
-//            user.setUserComments(userComments);
-//            ad.setComments(adComments);
-            userRepository.save(user);
-            adRepository.save(ad);
+        if (!user.getUserComments().contains(comment) || !user.getRole().getAuthority().equals("ROLE_ADMIN")) {
+            throw new ForbiddenAccessException();
+        } else {
             commentRepository.deleteById(comment.getId());
         }
-//    }
+    }
     /**
      * Метод для изменения комментария
      * Метод использует {@link UserRepository#findByEmail(String)}
@@ -114,25 +106,12 @@ public class CommentService {
         Ad ad = adRepository.findById(adId).orElseThrow(AdNotFoundException::new);
         User user = userRepository.findByEmail(username);
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
-        comment.setText(text.getText());
-        commentRepository.save(comment);
-//        if(!user.getUserComments().contains(comment)) {
-//            throw new ForbiddenAccessException();
-//        } else {
-//            List<Comment> userComments = user.getUserComments();
-//            List<Comment> adComments = ad.getComments();
-//            userComments.remove(comment);
-//            adComments.remove(comment);
-//            comment.setText(text.getText());
-//            userComments.add(comment);
-//            adComments.add(comment);
-//            user.setUserComments(userComments);
-//            ad.setComments(adComments);
-//            userRepository.save(user);
-//            adRepository.save(ad);
-//            commentRepository.deleteById(commentId);
-//            commentRepository.save(comment);
-//        }
+        if(!user.getUserComments().contains(comment)) {
+            throw new ForbiddenAccessException();
+        } else {
+            comment.setText(text.getText());
+            commentRepository.save(comment);
+        }
         return mapper.commentToCommentDTO(comment);
     }
 }
