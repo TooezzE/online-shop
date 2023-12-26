@@ -1,5 +1,10 @@
 package ru.skypro.homework.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +25,7 @@ public class ImageController {
     }
 
     //Получение картинки
+
     @GetMapping(value = "/image/{id}",
             produces = {MediaType.IMAGE_PNG_VALUE,
                     MediaType.IMAGE_JPEG_VALUE,

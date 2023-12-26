@@ -1,4 +1,5 @@
 package ru.skypro.homework.service.impl;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -31,7 +32,12 @@ public class UserServiceImpl implements UserService {
         this.imageService = imageService;
         this.passwordEncoder = passwordEncoder;
     }
-
+    /**
+     * Извлекает текущего аутентифицированного пользователя.
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     * {@link UserMapper#toUserDTO(User)}
+     * @return - объект UserDTO, представляющий текущего пользователя.
+     */
     //Метод извлекает текущего аутентифицированного пользователя.
     @Override
     public UserDTO getCurrentUser() {
@@ -40,6 +46,14 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(authentication.getName());
         return UserMapper.INSTANCE.toUserDTO(user);
     }
+    /**
+     * Изменение данных пользователя
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     * {@link UserMapper#updateUserDTOToUser(UpdateUserDTO, User)}
+     * {@link UserMapper#toUserDTO(User)}
+     * @param updateUserDTO - DTO модель класса {@link UpdateUserDTO}
+     * @return - пользователя с измененными данными
+     */
 
     //Метод изменение данных у пользователя
     @Override
@@ -50,7 +64,14 @@ public class UserServiceImpl implements UserService {
         UserMapper.INSTANCE.updateUserDTOToUser(updateUserDTO, user);
         return UserMapper.INSTANCE.toUserDTO(userRepository.save(user));
     }
-
+    /**
+   * Изменение пароля пользователя
+     * метод использует {@link UserRepository#findByEmail(String)}
+     * {@link PasswordEncoder#matches(CharSequence, String)}
+     * {@link PasswordEncoder#encode(CharSequence)}
+     * {@link JpaRepository#save(Object)}
+     * @param newPasswordDTO - новый пароль пользователя
+     */
     //  Метод изменения пароля у пользователя
     @Override
     public Void setPassword(NewPasswordDTO newPasswordDTO) {
@@ -76,7 +97,15 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return null;
     }
-
+    /**
+     * Изменение аватарки пользователя
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     * {@link ImageService#addImage(MultipartFile)}
+     * {@link JpaRepository#save(Object)}
+     * {@link ImageService#deleteImage(Integer)}
+     * @param image - новая аватарка пользователя
+     * @param userName - логин пользователя
+     */
     // Метод обновления  аватарки у пользователя
     @Override
     @Transactional

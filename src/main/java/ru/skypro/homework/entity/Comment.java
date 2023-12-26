@@ -23,7 +23,7 @@ public class Comment {
     @Column(nullable = false, length = 64)
     private String text;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private Long createdAt;                      // Дата и время создания в миллисекундах с 01.01.1970
 
 }

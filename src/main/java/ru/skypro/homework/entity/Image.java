@@ -13,7 +13,9 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "file_size")
     private Long fileSize;
+    @Column(name = "content_type")
     private String mediaType;
     @Lob
     @Type(type = "org.hibernate.type.ImageType")
