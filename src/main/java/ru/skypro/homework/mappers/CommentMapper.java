@@ -1,43 +1,21 @@
 package ru.skypro.homework.mappers;
 
-import org.springframework.stereotype.Service;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.CommentDTO;
-import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.entity.Comment;
+import ru.skypro.homework.entity.User;
 
-@Service
-public class CommentMapper {
+@Mapper(componentModel = "spring")
+public interface CommentMapper {
 
-     public CommentDTO commentToCommentDTO(Comment comment) {
-         CommentDTO dto = new CommentDTO();
-         dto.setPk(comment.getId());
-         dto.setAuthorImage("/images/get/" + comment.getUser().getImage().getId());
-         dto.setText(comment.getText());
-         dto.setCreatedAt(comment.getCreatedAt());
+    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
-         return dto;
-     }
-
-     public CreateOrUpdateComment commentToCreateOrUpdateComment(Comment comment) {
-         CreateOrUpdateComment dto = new CreateOrUpdateComment();
-         dto.setText(comment.getText());
-
-         return dto;
-     }
-
-     public Comment commentDTOToComment(CommentDTO dto) {
-         Comment comment = new Comment();
-         comment.setId(dto.getPk());
-         comment.setCreatedAt(dto.getCreatedAt());
-         comment.setText(dto.getText());
-
-         return comment; // not all fields
-     }
-
-     public Comment createOrUpdateCommentToComment(CreateOrUpdateComment dto) {
-         Comment comment = new Comment();
-         comment.setText(dto.getText());
-
-         return comment; // not all fields
-     }
+    // Преобразование Comment в CommentDTO
+    @Mapping(target = "author", source = "user.id")
+    @Mapping(target = "authorFirstName", source = "user.firstName")
+    @Mapping(target = "authorImage", expression = "java(\"/image/\" + user.getImage().getId())")
+    @Mapping(target = "pk", source = "comment.id")
+    CommentDTO toCommentDTO (Comment comment, User user);
 }

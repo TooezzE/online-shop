@@ -1,75 +1,37 @@
 package ru.skypro.homework.mappers;
 
-import org.springframework.stereotype.Service;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.AdDTO;
-import ru.skypro.homework.dto.CreateOrUpdateAd;
-import ru.skypro.homework.dto.ExtendedAd;
+import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
+import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.entity.User;
 
-@Service
-public class AdMapper {
+@Mapper(componentModel = "spring")
+public interface AdMapper {
 
-        public Ad toEntity(AdDTO dto) {
-            Ad ad = new Ad();
-            ad.setId(dto.getPk());
-            ad.setTitle(dto.getTitle());
-            ad.setPrice(dto.getPrice());
+    // Получение экземпляра маппера
+    AdMapper INSTANCE = Mappers.getMapper(AdMapper.class);
 
-            return ad; // not all fields
-        }
+    // Метод для преобразования Ad в AdDTO
+    @Mapping(target = "author", source = "ad.author.id")
+    @Mapping(target = "pk", source = "ad.id")
+    @Mapping(target = "image", expression = "java(\"/image/\" + ad.getImage().getId())")
+    AdDTO adToAdDTO(Ad ad);
 
-        public AdDTO toDTO(Ad entity) {
-            AdDTO dto = new AdDTO();
-            dto.setPk(entity.getId());
-            dto.setAuthor(entity.getUser().getId());
-            dto.setImage("/images/get/" + entity.getImage().getId());
-            dto.setTitle(entity.getTitle());
-            dto.setPrice(entity.getPrice());
+    // Метод для создания или обновления AdDTO в Ad
+    @Mapping(target = "author", source = "user")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "comments", ignore = true)
+    @Mapping(target = "image", ignore = true)
+    Ad createOrUpdateAdDTOToAd(CreateOrUpdateAdDTO createOrUpdateAdDTO, User user);
 
-            return dto;
-        }
-
-        public Ad createOrUpdateToEntity(CreateOrUpdateAd dto) {
-            Ad ad = new Ad();
-            ad.setTitle(dto.getTitle());
-            ad.setDescription(dto.getDescription());
-            ad.setPrice(dto.getPrice());
-
-            return ad; // not all fields
-        }
-
-        public CreateOrUpdateAd adToCreateOrUpdate(Ad ad) {
-            CreateOrUpdateAd dto = new CreateOrUpdateAd();
-            dto.setTitle(ad.getTitle());
-            dto.setPrice(ad.getPrice());
-            dto.setDescription(ad.getDescription());
-
-            return dto;
-        }
-
-        public ExtendedAd adToExtendedAd(Ad ad) {
-            ExtendedAd dto = new ExtendedAd();
-            dto.setPk(ad.getId());
-            dto.setDescription(ad.getDescription());
-            dto.setEmail(ad.getEmail());
-            dto.setImage("/images/get/" + ad.getImage().getId());
-            dto.setTitle(ad.getTitle());
-            dto.setAuthorFirstName(ad.getUser().getFirstName());
-            dto.setAuthorLastName(ad.getUser().getLastName());
-            dto.setPrice(ad.getPrice());
-
-            return dto;
-        }
-
-        public Ad extendedAdToAd(ExtendedAd extendedAd) {
-            Ad ad = new Ad();
-            ad.setId(extendedAd.getPk());
-            ad.setPrice(extendedAd.getPrice());
-            ad.setDescription(extendedAd.getDescription());
-            ad.setTitle(extendedAd.getTitle());
-            ad.setEmail(extendedAd.getEmail());
-
-            return ad; // not all fields
-        }
-
+    // Метод для преобразования Ad в ExtendedAdDTO
+    @Mapping(target = "pk", source = "ad.id")
+    @Mapping(target = "authorFirstName", source = "user.firstName")
+    @Mapping(target = "authorLastName", source = "user.lastName")
+    @Mapping(target = "image", expression = "java(\"/image/\" + ad.getImage().getId())")
+    ExtendedAdDTO toExtendedAdDTO(Ad ad, User user);
 }
