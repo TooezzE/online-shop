@@ -1,9 +1,17 @@
 package ru.skypro.homework.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.entity.User;
 
-@Repository
-public interface AdRepository extends JpaRepository<Ad, Integer> {
+import java.util.List;
+import java.util.Optional;
+
+public interface AdRepository extends JpaRepository<Ad,Integer> {
+    List<Ad> findAllByAuthor(User author);
+
+    @Override
+    Optional<Ad> findById(Integer id);
+
+    void deleteById(Integer id);
 }
