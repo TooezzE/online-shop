@@ -1,5 +1,5 @@
 package ru.skypro.homework.service.impl;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,13 @@ public class ImageServiceImpl implements ImageService {
     public ImageServiceImpl(ImageRepository imageRepository) {
         this.imageRepository = imageRepository;
     }
-
+    /**
+     * Получение изображения по ID
+     * Метод использует {@link JpaRepository#findById(Object)}
+     * @param id - id изображения
+     * @return ResponseEntity с массивом байтов, представляющим изображение,
+     * и соответствующими заголовками.
+     */
     //Метод получения изображения по ID
     @Override
     public ResponseEntity<byte[]> getImage(Integer id) {
@@ -35,7 +41,12 @@ public class ImageServiceImpl implements ImageService {
         headers.setContentLength(imageBytes.length);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(imageBytes);
     }
-
+    /**
+     * Добавление изображения в репозиторий
+     * Метод использует {@link JpaRepository#save(Object)}
+     * @param image - изображение
+     * @return добавленное изображение
+     */
     //Метод добавления изображения
     @Override
     public Image addImage(MultipartFile image) {
@@ -52,7 +63,11 @@ public class ImageServiceImpl implements ImageService {
         imageRepository.save(newImage);
         return newImage;
     }
-
+    /**
+     * Удаление изображения из репозитория
+     * Метод использует {@link JpaRepository#deleteById(Object)}
+     * @param imageId - id изображения
+     */
     //Метод удаления изображения
     @Override
     public void deleteImage(Integer imageId) {

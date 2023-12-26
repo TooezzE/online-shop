@@ -20,7 +20,7 @@ import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.ImageService;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +42,11 @@ public class AdServiceImpl implements AdService {
         this.commentRepository = commentRepository;
         this.imageService = imageService;
     }
-
+    /**
+     * Метод для получения всех объявлений в виде DTO моделей
+     * Метод использует {@link JpaRepository#findAll()}
+     * @return возвращает все объявления из БД
+     */
     //Метод для получения всех объявлений в виде DTO моделей
     @Override
     public AdsDTO getAllAds() {
@@ -54,7 +58,17 @@ public class AdServiceImpl implements AdService {
         adsDTO.setResults(list);
         return adsDTO;
     }
-
+    /**
+     * Метод для добавления нового объявления в БД
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     *  {@link ImageService#addImage(MultipartFile)}
+     *  {@link JpaRepository#save(Object)}
+     *  {@link AdMapper#createOrUpdateAdDTOToAd(CreateOrUpdateAdDTO, User)}
+     *  {@link AdMapper#adToAdDTO(Ad)}
+     * @param createOrUpdateAdDTO - DTO модель класса {@link CreateOrUpdateAdDTO};
+     * @param image - фотография объявления
+     * @return возвращает объявление в качестве DTO модели
+     */
     //Метод для добавления нового объявления
     @Override
     public AdDTO addAd(CreateOrUpdateAdDTO createOrUpdateAdDTO, MultipartFile image) {
@@ -65,7 +79,14 @@ public class AdServiceImpl implements AdService {
         ad.setImage(imageService.addImage(image));
         return AdMapper.INSTANCE.adToAdDTO(adRepository.save(ad));
     }
-
+    /**
+     * Метод для получения информации об объявлении по id
+     * Метод использует {@link AdRepository#findById}
+     *  {@link UserRepository#findById}
+     *  {@link AdMapper#toExtendedAdDTO(Ad, User)}
+     * @param adId - id объявления
+     * @return возвращает DTO модель объявления
+     */
     //Метод для получения информации об объявлении по id
     @Override
     public ExtendedAdDTO getAdInfo(Integer adId) {
@@ -74,7 +95,15 @@ public class AdServiceImpl implements AdService {
         User user = userRepository.findById(ad.getAuthor().getId()).orElseThrow(UserNotFoundException::new);
         return AdMapper.INSTANCE.toExtendedAdDTO(ad, user);
     }
-
+    /**
+     * Метод для удаления объявления по id
+     * Метод использует {@link AdRepository#findById}
+     * {@link AdRepository#deleteById}
+     * {@link CommentRepository#deleteAllByAd_id(Integer)}
+     * Метод использует {@link ImageService#deleteImage}
+     * @param adId - id объявления
+     * @return null
+     */
     //Метод для удаления объявления по id
     @Override
     public Void deleteAd(Integer adId) {
@@ -85,7 +114,15 @@ public class AdServiceImpl implements AdService {
         commentRepository.deleteAllByAd_id(adId);
         return null;
     }
-
+    /**
+     * Метод для изменения объявления
+     * Метод использует {@link AdRepository#findById}
+     * {@link JpaRepository#save(Object)}
+     * {@link AdMapper#adToAdDTO(Ad)}
+     * @param adId - id объявления
+     * @param createOrUpdateAdDTO - DTO модель класса {@link CreateOrUpdateAdDTO};
+     * @return возвращает DTO модель объявления
+     */
     //Метод для изменения объявления
     @Override
     public AdDTO patchAd(Integer adId, CreateOrUpdateAdDTO createOrUpdateAdDTO) {
@@ -96,7 +133,12 @@ public class AdServiceImpl implements AdService {
         ad.setPrice(createOrUpdateAdDTO.getPrice());
         return AdMapper.INSTANCE.adToAdDTO(adRepository.save(ad));
     }
-
+    /**
+     * Метод получения всех объявлений данного пользователя
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     * {@link AdRepository#findAllByAuthor(User)}
+     * @return возвращает DTO модель объявления пользователя
+     */
     //Метод получения всех объявлений данного пользователя
     @Override
     public AdsDTO getAllAdsByAuthor() {
@@ -109,6 +151,15 @@ public class AdServiceImpl implements AdService {
         adsDTO.setResults(list);
         return adsDTO;
     }
+    /**
+     * Метод изменения фотографии у объявления
+     * Метод использует {@link JpaRepository#findById(Object)}
+     * {@link ImageService#addImage(MultipartFile)}
+     * {@link ImageService#deleteImage}
+     * {@link JpaRepository#save(Object)}
+     * @param adId - id объявления
+     * @param image - фотография объявления
+     */
 
     // Метод изменения фотографии у объявления
     @Override

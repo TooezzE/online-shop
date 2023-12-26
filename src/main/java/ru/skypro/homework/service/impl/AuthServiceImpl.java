@@ -24,7 +24,14 @@ public class AuthServiceImpl implements AuthService {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
     }
-
+    /**
+     * Логика аутентификации пользователя.
+     * Метод использует {@link CustomUserDetailsService#loadUserByUsername(String)}
+     * {@link PasswordEncoder#matches(CharSequence, String)}
+     * @param userName - логин пользователя
+     * @param password - пароль пользователя
+     * @return true, если аутентификация прошла успешно, иначе - false.
+     */
     //Метод аутентификации пользователя.
     @Override
     public boolean login(String userName, String password) {
@@ -35,6 +42,15 @@ public class AuthServiceImpl implements AuthService {
         }
         return true;
     }
+    /**
+     * Логика регистрации нового пользователя.
+     * Метод использует {@link UserRepository#findByEmail(String)}
+     * {@link PasswordEncoder#encode(CharSequence)}
+     * {@link UserMapper#registerDTOToUser(RegisterDTO)}
+     * @param register - информация о пользователе, который необходимо зарегистрировать.
+     *                 Модель класса {@link RegisterDTO}
+     * @return true, если регистрация прошла успешно, иначе - false.
+     */
 
     // Метод регестрации нового  пользователя.
     @Override
