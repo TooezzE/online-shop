@@ -1,32 +1,37 @@
 package ru.skypro.homework.controller;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.entity.Image;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 import ru.skypro.homework.service.ImageService;
 
+@Slf4j
 @RestController
-@CrossOrigin(value = "http://localhost:3000")
-@RequestMapping("/images")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ImageController {
+    private final ImageService imageService;
 
-    private final ImageService service;
-
-    public ImageController(ImageService service) {
-        this.service = service;
+    public ImageController(ImageService imageService) {
+        this.imageService = imageService;
     }
 
+    //Получение картинки
 
-    @GetMapping("/get/{id}")
+    @GetMapping(value = "/image/{id}",
+            produces = {MediaType.IMAGE_PNG_VALUE,
+                    MediaType.IMAGE_JPEG_VALUE,
+                    MediaType.IMAGE_GIF_VALUE, "image/*"})
     public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
-        Image image = service.getImage(id);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(image.getContentType()));
-        headers.setContentLength(image.getBytes().length);
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(image.getBytes());
+        return imageService.getImage(id);
     }
+
 }

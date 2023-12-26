@@ -1,114 +1,30 @@
 package ru.skypro.homework.service;
 
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdDTO;
-import ru.skypro.homework.dto.Ads;
-import ru.skypro.homework.dto.CreateOrUpdateAd;
-import ru.skypro.homework.dto.ExtendedAd;
-import ru.skypro.homework.entity.Ad;
-import ru.skypro.homework.entity.Image;
-import ru.skypro.homework.entity.User;
-import ru.skypro.homework.exceptions.AdNotFoundException;
-import ru.skypro.homework.exceptions.ForbiddenAccessException;
-import ru.skypro.homework.mappers.AdMapper;
-import ru.skypro.homework.repository.AdRepository;
-import ru.skypro.homework.repository.ImageRepository;
-import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.dto.AdsDTO;
+import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
+import ru.skypro.homework.dto.ExtendedAdDTO;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+public interface AdService {
 
-@Service
-public class AdService {
+    AdsDTO getAllAds();
 
-    private final AdRepository adRepository;
-    private final UserRepository userRepository;
-    private final ImageService imageService;
-    private final AdMapper mapper;
+    AdDTO addAd(CreateOrUpdateAdDTO createOrUpdateAdDTO, MultipartFile image);
 
-    public AdService(AdRepository adRepository, UserRepository userRepository, ImageService imageService, AdMapper mapper) {
-        this.adRepository = adRepository;
-        this.userRepository = userRepository;
-        this.imageService = imageService;
-        this.mapper = mapper;
-    }
 
-    @Transactional
-    public Ads getAllAds() {
-        List<AdDTO> adList = adRepository.findAll().stream()
-                .map(a -> mapper.toDTO(a))
-                .collect(Collectors.toList());
-        Ads ads = new Ads();
-        ads.setResults(adList);
-        ads.setCount(adList.size());
-        return ads;
-    }
+    ExtendedAdDTO getAdInfo(Integer adId);
 
-    public CreateOrUpdateAd createAd(String username, CreateOrUpdateAd createOrUpdateAd, MultipartFile file) throws IOException {
-        User user = userRepository.findByEmail(username);
-        Ad ad = new Ad();
-        ad.setUser(user);
-        ad.setDescription(createOrUpdateAd.getDescription());
-        ad.setEmail(username);
-        ad.setPrice(createOrUpdateAd.getPrice());
-        ad.setTitle(createOrUpdateAd.getTitle());
-        ad.setImage(imageService.addImage(file));
-        adRepository.save(ad);
-        return createOrUpdateAd;
-    }
+    Void deleteAd(Integer adId);
 
-    public ExtendedAd getAd(Integer id) {
-        Ad ad = adRepository.findById(id).orElseThrow();
-        return mapper.adToExtendedAd(ad);
-    }
+    AdDTO patchAd(Integer adId, CreateOrUpdateAdDTO createOrUpdateAdDTO);
 
-    public void deleteAd(String username, Integer id) {
-        Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
-        User user = userRepository.findByEmail(username);
-        if(!user.getUserAds().contains(ad) || !user.getAuthorities().contains("ROLE_ADMIN")) {
-            throw new ForbiddenAccessException();
-        } else  {
-            adRepository.deleteById(id);
-        }
-    }
+    AdsDTO getAllAdsByAuthor();
 
-    public AdDTO editAd(String username, Integer id, CreateOrUpdateAd newAd) {
-        Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
-        User user = userRepository.findByEmail(username);
-        if(!user.getUserAds().contains(ad)) {
-            throw new ForbiddenAccessException();
-        } else {
-            ad.setTitle(newAd.getTitle());
-            ad.setDescription(newAd.getDescription());
-            ad.setPrice(newAd.getPrice());
-            adRepository.save(ad);
-        }
-        return mapper.toDTO(ad);
-    }
 
-    @Transactional
-    public Ads getAllAdsOfUser(String username) {
-        User user = userRepository.findByEmail(username);
-        Ads ads = new Ads();
-        ads.setResults(user.getUserAds().stream().map(a -> mapper.toDTO(a)).collect(Collectors.toList()));
-        ads.setCount(user.getUserAds().size());
-        return ads;
-    }
+    Void patchAdImage(Integer adId, MultipartFile image);
 
-    @Transactional
-    public void updateAdImage(String username, Integer id, MultipartFile file) {
-        Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
-        User user = userRepository.findByEmail(username);
-        if(!user.getUserAds().contains(ad)) {
-            throw new ForbiddenAccessException();
-        }
-        Integer imageId = ad.getImage().getId();
-        ad.setImage(imageService.addImage(file));
-        imageService.deleteImage(imageId);
-        adRepository.save(ad);
-    }
+
+
 }
+

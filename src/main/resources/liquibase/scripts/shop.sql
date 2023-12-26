@@ -7,7 +7,7 @@ create table comments (
     created_at int8,
     text varchar,
     ad_id int,
-    user_id int
+    author_id int
 );
 
 
@@ -25,10 +25,9 @@ create table users (
 create table ads (
     id serial primary key,
     description varchar,
-    email varchar,
     price int,
     title varchar,
-    user_id int,
+    author_id int,
     image_id int
 );
 
@@ -36,5 +35,5 @@ create table images (
     id serial primary key,
     file_size int8,
     content_type varchar,
-    "bytes" bytea NULL
+    "data" bytea NULL
 );

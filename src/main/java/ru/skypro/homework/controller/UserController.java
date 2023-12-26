@@ -1,62 +1,137 @@
 package ru.skypro.homework.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.NewPassword;
-import ru.skypro.homework.dto.UpdateUser;
+import ru.skypro.homework.dto.NewPasswordDTO;
+import ru.skypro.homework.dto.UpdateUserDTO;
 import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.service.UserService;
 
 @Slf4j
-@CrossOrigin(value = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService service;
+    private final UserService userService;
 
-    public UserController(UserService service) {
-        this.service = service;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @PostMapping("/set_password")
-    public ResponseEntity<?> updatePassword(@RequestBody NewPassword newPassword, Authentication auth) {
-        if(service.updatePassword(auth.getName(), newPassword)) {
-            return ResponseEntity.ok().build();
-        } else if (!auth.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    }
-
+    //Получение информации о пользователе
+    @Operation(
+            tags = "Пользователи",
+            summary = "Получение информации об авторизованном пользователе",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Пользователь найден",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = UserDTO.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content()
+                    )
+            }
+    )
     @GetMapping("/me")
-    public ResponseEntity<UserDTO> getUserInfo(Authentication auth) {
-        UserDTO userDTO = service.getUserInfo(auth.getName());
-        if(userDTO != null) {
-            return ResponseEntity.ok().body(userDTO);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<UserDTO>getUser() {
+        return ResponseEntity.ok(userService.getCurrentUser());
     }
 
+    //Обновление информации о пользователе
+    @Operation(
+            tags = "Пользователи",
+            summary = "Обновление информации об авторизованном пользователе",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = UserDTO.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content()
+                    )
+            }
+    )
     @PatchMapping("/me")
-    public ResponseEntity<UpdateUser> updateUserInfo(@RequestBody UpdateUser updateUser, Authentication auth) {
-        if(service.updateUserInfo(auth.getName(), updateUser) != null) {
-            return ResponseEntity.ok().body(updateUser);
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UpdateUserDTO updateUserDTO) {
+        if (null==updateUserDTO) {
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        UserDTO editUser = userService.updateUser(updateUserDTO);
+        if (null==editUser) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(editUser);
     }
+    @Operation(
+            tags = "Пользователи",
+            summary = "Обновление пароля",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "ОК",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbidden",
+                            content = @Content()
+                    )
+            }
+    )
 
+    //Смена пароля у пользователя
+    @PostMapping("/set_password")
+    public ResponseEntity<?> setUserPassword(@RequestBody NewPasswordDTO newPasswordDTO) {
+        return ResponseEntity.ok(userService.setPassword(newPasswordDTO));
+    }
+    @Operation(
+            tags = "Пользователи",
+            summary = "Обновление аватара авторизованного пользователя",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "ОК",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content()
+                    )
+            }
+    )
+
+    //Обновление аватара у пользователя
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateUserImage(@RequestBody MultipartFile image, Authentication auth) {
-        if(!auth.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        service.updateUserImage(auth.getName(), image);
+    public ResponseEntity<Void> loadImageByUser(@RequestPart(value = "image") MultipartFile image) {
+        userService.updateUserImage(image, SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok().build();
+
     }
 }
