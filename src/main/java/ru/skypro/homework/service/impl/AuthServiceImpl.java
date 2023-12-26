@@ -9,7 +9,7 @@ import ru.skypro.homework.exception.InvalidPasswordException;
 import ru.skypro.homework.manager.CustomUserDetailsService;
 import ru.skypro.homework.mappers.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
-import ru.skypro.homework.service.AuthService;
+import ru.skypro.homework.service.interfaces.AuthService;
 
 @Service
 @Slf4j
