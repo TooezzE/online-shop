@@ -1,46 +1,36 @@
 package ru.skypro.homework.service.impl;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.RegisterDTO;
-import ru.skypro.homework.exception.InvalidPasswordException;
-import ru.skypro.homework.manager.CustomUserDetailsService;
+import ru.skypro.homework.dto.Register;
+import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mappers.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
+import ru.skypro.homework.service.CustomUserDetailsService;
 
 @Service
-@Slf4j
 public class AuthServiceImpl implements AuthService {
 
-    private final CustomUserDetailsService manager;
-    private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
+    private final CustomUserDetailsService userDetailsService;
+    private final PasswordEncoder encoder;
+    private final UserMapper mapper;
+    private UserRepository repository;
 
-    public AuthServiceImpl(CustomUserDetailsService manager, PasswordEncoder passwordEncoder, UserRepository userRepository) {
-        this.manager = manager;
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
+    public AuthServiceImpl(CustomUserDetailsService userDetailsService,
+                           PasswordEncoder passwordEncoder, UserMapper mapper, UserRepository repository) {
+        this.userDetailsService = userDetailsService;
+        this.encoder = passwordEncoder;
+        this.mapper = mapper;
+        this.repository = repository;
     }
-    /**
-     * Логика аутентификации пользователя.
-     * Метод использует {@link CustomUserDetailsService#loadUserByUsername(String)}
-     * {@link PasswordEncoder#matches(CharSequence, String)}
-     * @param userName - логин пользователя
-     * @param password - пароль пользователя
-     * @return true, если аутентификация прошла успешно, иначе - false.
-     */
-    //Метод аутентификации пользователя.
+
     @Override
     public boolean login(String userName, String password) {
-        log.info("Attempting login for user: {}", userName);
-        UserDetails userDetails = manager.loadUserByUsername(userName);
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new InvalidPasswordException("Invalid password");
-        }
-        return true;
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+        return encoder.matches(password, userDetails.getPassword());
     }
     /**
      * Логика регистрации нового пользователя.
@@ -52,15 +42,10 @@ public class AuthServiceImpl implements AuthService {
      * @return true, если регистрация прошла успешно, иначе - false.
      */
 
-    // Метод регестрации нового  пользователя.
     @Override
-    public boolean register(RegisterDTO register) {
-        log.info("Attempting registration");
-        if (userRepository.findByEmail(register.getUsername()) != null) {
-            return false;
-        }
-        register.setPassword(passwordEncoder.encode(register.getPassword()));
-        userRepository.save(UserMapper.INSTANCE.registerDTOToUser(register));
+    public boolean register(Register register) {
+        User user = mapper.registerToUser(register);
+        repository.save(user);
         return true;
     }
 
