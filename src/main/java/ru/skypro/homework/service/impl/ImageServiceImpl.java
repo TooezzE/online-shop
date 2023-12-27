@@ -11,7 +11,7 @@ import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.exception.ForbiddenException;
 import ru.skypro.homework.exception.ImageNotFoundException;
 import ru.skypro.homework.repository.ImageRepository;
-import ru.skypro.homework.service.ImageService;
+import ru.skypro.homework.service.interfaces.ImageService;
 
 import java.io.IOException;
 

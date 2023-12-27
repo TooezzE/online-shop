@@ -16,8 +16,8 @@ import ru.skypro.homework.exception.InvalidPasswordException;
 import ru.skypro.homework.exception.UserNotFoundException;
 import ru.skypro.homework.mappers.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
-import ru.skypro.homework.service.ImageService;
-import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.service.interfaces.ImageService;
+import ru.skypro.homework.service.interfaces.UserService;
 
 @Service
 @Slf4j

@@ -1,37 +1,42 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.Register;
-import ru.skypro.homework.entity.User;
+import ru.skypro.homework.dto.RegisterDTO;
+import ru.skypro.homework.exception.InvalidPasswordException;
+import ru.skypro.homework.manager.CustomUserDetailsService;
 import ru.skypro.homework.mappers.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
-import ru.skypro.homework.service.AuthService;
-import ru.skypro.homework.service.CustomUserDetailsService;
+import ru.skypro.homework.service.interfaces.AuthService;
+
 
 @Service
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
-    private final CustomUserDetailsService userDetailsService;
-    private final PasswordEncoder encoder;
-    private final UserMapper mapper;
-    private UserRepository repository;
+    private final CustomUserDetailsService manager;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    public AuthServiceImpl(CustomUserDetailsService userDetailsService,
-                           PasswordEncoder passwordEncoder, UserMapper mapper, UserRepository repository) {
-        this.userDetailsService = userDetailsService;
-        this.encoder = passwordEncoder;
-        this.mapper = mapper;
-        this.repository = repository;
+    public AuthServiceImpl(CustomUserDetailsService manager, PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.manager = manager;
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
+    //Метод аутентификации пользователя.
     @Override
     public boolean login(String userName, String password) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-        return encoder.matches(password, userDetails.getPassword());
+        log.info("Attempting login for user: {}", userName);
+        UserDetails userDetails = manager.loadUserByUsername(userName);
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new InvalidPasswordException("Invalid password");
+        }
+        return true;
     }
+
     /**
      * Логика регистрации нового пользователя.
      * Метод использует {@link UserRepository#findByEmail(String)}
@@ -41,11 +46,14 @@ public class AuthServiceImpl implements AuthService {
      *                 Модель класса {@link RegisterDTO}
      * @return true, если регистрация прошла успешно, иначе - false.
      */
-
     @Override
-    public boolean register(Register register) {
-        User user = mapper.registerToUser(register);
-        repository.save(user);
+    public boolean register(RegisterDTO register) {
+        log.info("Attempting registration");
+        if (userRepository.findByEmail(register.getUsername()) != null) {
+            return false;
+        }
+        register.setPassword(passwordEncoder.encode(register.getPassword()));
+        userRepository.save(UserMapper.INSTANCE.registerDTOToUser(register));
         return true;
     }
 

@@ -16,7 +16,7 @@ import ru.skypro.homework.mappers.CommentMapper;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
-import ru.skypro.homework.service.CommentService;
+import ru.skypro.homework.service.interfaces.CommentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
      * {@link JpaRepository#save(Object)}
      * {@link CommentMapper#toCommentDTO(Comment, User)}
      * @param adId - id объявления
-     * @param createOrUpdateCommentDTO - DTO модель класса {@link CreateOrUpdateAdDTO};
+     * @param createOrUpdateCommentDTO - DTO модель класса {@link CreateOrUpdateCommentDTO};
      * @return возвращает DTO модель комментария
      */
     //Метод добавления комментария к объявлению
@@ -102,7 +102,7 @@ public class CommentServiceImpl implements CommentService {
      * {@link CommentMapper#toCommentDTO(Comment, User)}
      * @param adId - id объявления
      * @param commentId - id комментария
-     * @param createOrUpdateCommentDTO - DTO модель класса {@link CreateOrUpdateAdDTO};
+     * @param createOrUpdateCommentDTO - DTO модель класса {@link CreateOrUpdateCommentDTO};
      * @return - возвращает DTO модель комментария
      */
     @Override
