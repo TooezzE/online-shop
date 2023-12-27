@@ -26,7 +26,14 @@ public class AuthServiceImpl implements AuthService {
         this.userRepository = userRepository;
     }
 
-    //Метод аутентификации пользователя.
+    /**
+     * Логика аутентификации пользователя.
+     * Метод использует {@link CustomUserDetailsService#loadUserByUsername(String)}
+     * {@link PasswordEncoder#matches(CharSequence, String)}
+     * @param userName - логин пользователя
+     * @param password - пароль пользователя
+     * @return true, если аутентификация прошла успешно, иначе - false.
+     */
     @Override
     public boolean login(String userName, String password) {
         log.info("Attempting login for user: {}", userName);
