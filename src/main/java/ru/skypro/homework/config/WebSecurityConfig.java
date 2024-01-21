@@ -2,61 +2,49 @@ package ru.skypro.homework.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.skypro.homework.dto.Role;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+@EnableMethodSecurity
 @Configuration
 public class WebSecurityConfig {
 
+    // переменная с адресами страниц, которые открываются без аутентификации.
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/v3/api-docs",
             "/webjars/**",
             "/login",
-            "/register"
+            "/register",
+            "/ads",
+            "/image/**"
     };
-
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails user =
-                User.builder()
-                        .username("user@gmail.com")
-                        .password("password")
-                        .passwordEncoder(passwordEncoder::encode)
-                        .roles(Role.USER.name())
-                        .build();
-        return new InMemoryUserDetailsManager(user);
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf()
-                .disable() // отключаем csrf для работы с запросами в postman
-                .authorizeHttpRequests( // предоставляем разрешения для следующих url:
-                        authorization ->
-                                authorization
+                .disable()
+                .authorizeHttpRequests( authorization -> authorization
                                         .mvcMatchers(AUTH_WHITELIST)
-                                        .permitAll()// разрешает доступ всем, в том числе неаутентифированным пользователям
+                                        .permitAll()
                                         .mvcMatchers("/ads/**", "/users/**")
-                                        .authenticated()) // доступ всем аутентифицированным пользователям
+                                        .authenticated())
                 .cors()
                 .and()
-                .httpBasic(withDefaults()); // задает тип аутентификации, показывает пользователю нативную браузерную форму для ввода данных
+                .httpBasic(withDefaults());
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    } // бин определяет, как шифруется пароль
+    }
 
 }

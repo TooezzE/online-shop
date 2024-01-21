@@ -1,92 +1,36 @@
 package ru.skypro.homework.mappers;
 
-import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.factory.Mappers;
+import ru.skypro.homework.dto.RegisterDTO;
+import ru.skypro.homework.dto.UpdateUserDTO;
+import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.entity.User;
 
-@Service
-public class UserMapper {
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    public Login userToLogin(User user) {
-        Login login = new Login();
-        login.setUsername(user.getEmail());
-        login.setPassword(user.getPassword());
+    // Преобразование RegisterDTO в User
+    @Mapping(target = "email", source = "username")
+    User registerDTOToUser(RegisterDTO registerDTO);
 
-        return login;
-    }
+    // Преобразование User в UserDTO
+    @Mapping(target = "image", expression = "java(user.getImage() != null ? \"/image/\" + user.getImage().getId() : null)")
+    UserDTO toUserDTO(User user);
 
-    public Register userToRegister(User user) {
-        Register register = new Register();
-        register.setUsername(user.getEmail());
-        register.setPassword(user.getPassword());
-        register.setFirstName(user.getFirstName());
-        register.setLastName(user.getLastName());
-        register.setPhone(user.getPhone());
-        register.setRole(user.getRole());
+    // Обновление полей User из UpdateUserDTO
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "email", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "ads", ignore = true)
+    @Mapping(target = "comments", ignore = true)
+    void updateUserDTOToUser(UpdateUserDTO updateUserDTO, @MappingTarget User user);
 
-        return register;
-    }
-
-    public UpdateUser userToUpdateUser(User user) {
-        UpdateUser updateUser = new UpdateUser();
-        updateUser.setFirstName(user.getFirstName());
-        updateUser.setLastName(user.getLastName());
-        updateUser.setPhone(user.getPhone());
-
-        return updateUser;
-    }
-
-    public UserDTO userToUserDTO(User user) {
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setFirstName(user.getFirstName());
-        dto.setLastName(user.getLastName());
-        dto.setEmail(user.getEmail());
-        dto.setPhone(user.getPhone());
-        dto.setImage(user.getImageLink());
-        dto.setRole(user.getRole());
-
-        return dto;
-    }
-
-    public User userDTOToUser(UserDTO dto) {
-        User user = new User();
-        user.setId(dto.getId());
-        user.setEmail(dto.getEmail());
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setPhone(dto.getPhone());
-        user.setRole(dto.getRole());
-        user.setImageLink(dto.getImage());
-
-        return user;
-    }
-
-    public User updateUserToUser(UpdateUser dto) {
-        User user = new User();
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setPhone(dto.getPhone());
-
-        return user;
-    }
-
-    public User registerToUser(Register register) {
-        User user = new User();
-        user.setEmail(register.getUsername());
-        user.setPassword(register.getPassword());
-        user.setFirstName(register.getFirstName());
-        user.setLastName(register.getLastName());
-        user.setPhone(register.getPhone());
-
-        return user;
-    }
-
-    public User loginToUser(Login login) {
-        User user = new User();
-        user.setEmail(login.getUsername());
-        user.setPassword(login.getPassword());
-
-        return user;
-    }
+    // Преобразование User в UpdateUserDTO
+    UpdateUserDTO userToUpdateUserDTO(User user);
 }
